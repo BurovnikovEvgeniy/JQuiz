@@ -1,0 +1,69 @@
+show dialog and go ahead
+DON'T
+....
+dialog.show();
+result = dialog.getResult()
+... result ....
+
+DO as following
+
+SwingUtilities.invokeLater(() -> dialog.show());
+...
+....
+
+OkButton, cancelButton JButton
+button.addlistener(listener);
+ActionListener actionPerformed(..) {
+    get data from fields of dialog
+    process data in new thread
+    ....
+}
+
+
+package -> sub packages -> class -> method -> input
+
+addListener(this) - in all UI components
+
+core   --x-->  UI
+
+
+
+
+package quiz;
+
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
+
+import java.io.File;
+import java.util.Map;
+
+final class Application {
+    private static String[] args;
+    private Map<String,Object> myMap;
+
+    Application(String[] args) {
+        Application.args = args;
+    }
+
+    void start() {
+        createBD();
+        printBD();
+        new Frame().setVisible(true);
+    }
+
+    void createBD() {
+        DB db = DBMaker.fileDB(new File("testdb"))
+                .closeOnJvmShutdown()
+                .make();
+        db.treeMap("testmap");
+        myMap = db.getAll();
+        myMap.put("godzila777", "fgd728mk?!yfj");
+        myMap.put("robocar2001", "kdh!hk)(mmfj+");
+    }
+
+    void printBD() {
+        for (String key : myMap.keySet()) {
+            System.out.println(key + " : " + myMap.get(key));
+        }
+    }
+}

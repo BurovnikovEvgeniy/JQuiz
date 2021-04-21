@@ -1,0 +1,10 @@
+db -> model
+ui -> model
+core -> db, ui
+
+model - user: id, name, login/password
+        theme: question + 4 answers + # right answer
+        result: user.id, answer, date
+db IT create collection, CRUD -> DbManager
+ui: draw
+core:
