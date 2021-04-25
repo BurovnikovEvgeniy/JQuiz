@@ -1,10 +1,11 @@
 package model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Question {
+public class Question implements Serializable {
     private String question;
-    private List<String> variants;
+    private String[] variants;
 
     public String getQuestion() {
         return question;
@@ -14,7 +15,7 @@ public class Question {
         this.question = question;
     }
 
-    public void setVariants(List<String> variants) {
+    public void setVariants(String[] variants) {
         this.variants = variants;
     }
 
@@ -22,7 +23,7 @@ public class Question {
         this.correctAnswerIndex = correctAnswerIndex;
     }
 
-    public List<String> getVariants() {
+    public String[] getVariants() {
         return variants;
     }
 
@@ -32,7 +33,7 @@ public class Question {
 
     private int correctAnswerIndex;
 
-    public Question(String question, List<String> variants, int correctAnswerIndex) {
+    public Question(String question, String[] variants, int correctAnswerIndex) {
         this.question = question;
         this.variants = variants;
         this.correctAnswerIndex = correctAnswerIndex;
