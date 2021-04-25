@@ -1,8 +1,9 @@
 package model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Results {
+public class Results implements Serializable {
     private String login;
     private Date date;
     private int score;
@@ -16,6 +17,12 @@ public class Results {
                 this.score++;
             }
         }
+    }
+
+    public Results(String login, Date date, int score) {
+        this.login = login;
+        this.date = date;
+        this.score = score;
     }
 
     public void setLogin(String login) {
