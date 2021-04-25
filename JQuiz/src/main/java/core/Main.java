@@ -1,6 +1,7 @@
 package core;
 
-/**Biryukova Marina,
+/**
+ * Biryukova Marina, Dzutseva Sabina
  * Mentoring program '20-21 at Dell Technologies
  * February - May 2021
  * Java knowledge quiz program

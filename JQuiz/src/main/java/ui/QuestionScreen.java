@@ -53,7 +53,7 @@ public class QuestionScreen extends JComponent {
         g2.setFont(font);
         FontMetrics fm = g2.getFontMetrics();
         String serialNumber = NUMBER + "/" + QUESTIONS_COUNT;
-        int posX = ((WIDTH - fm.stringWidth(serialNumber))/2);
+        int posX = ((WIDTH - fm.stringWidth(serialNumber)) / 2);
         int posY = 20;
         g2.drawString(serialNumber, posX, posY);
     }
@@ -72,7 +72,7 @@ public class QuestionScreen extends JComponent {
 
     private void drawVariants() {
         for (int i = 0; i < 4; i++) {
-            variants[i] = new JButton(QUESTION.getVariants().get(i));
+            variants[i] = new JButton(QUESTION.getVariants()[i]);
             variants[i].setBackground(VARIANT_COLOR);
             variants[i].setSize(VARIANT_SIZE);
             int posX = (WIDTH - 2 * VARIANT_SIZE.width - 20) / 2 + (VARIANT_SIZE.width + 20) * (i % 2);
@@ -83,14 +83,12 @@ public class QuestionScreen extends JComponent {
             int finalI = i;
             variants[i].addActionListener(actionEvent -> {
                 if (chosenIndex != -1) {
-                    SwingUtilities.invokeLater(()->new NotificationFrame("You have already chosen the answer!").setVisible(true));
-                }
-                else {
+                    SwingUtilities.invokeLater(() -> new NotificationFrame("You have already chosen the answer!").setVisible(true));
+                } else {
                     chosenIndex = finalI;
                     if (finalI == QUESTION.getCorrectAnswerIndex()) {
                         variants[finalI].setBackground(Color.GREEN);
-                    }
-                    else {
+                    } else {
                         variants[finalI].setBackground(Color.RED);
                     }
                 }
@@ -121,8 +119,7 @@ public class QuestionScreen extends JComponent {
         JButton nextQuestion;
         if (NUMBER == QUESTIONS_COUNT) {
             nextQuestion = new JButton("Завершить");
-        }
-        else {
+        } else {
             nextQuestion = new JButton("Следующий вопрос");
         }
         nextQuestion.setBackground(BUTTON_COLOR);
@@ -132,12 +129,11 @@ public class QuestionScreen extends JComponent {
         nextQuestion.setLocation(posX, posY);
         Font font = new Font("TimesRoman", Font.PLAIN, 14);
         nextQuestion.setFont(font);
-        nextQuestion.setMargin(new Insets(0,0,0,0));
+        nextQuestion.setMargin(new Insets(0, 0, 0, 0));
         nextQuestion.addActionListener(actionEvent -> {
             if (chosenIndex == -1) {
-                SwingUtilities.invokeLater(()->new NotificationFrame("You did not choose the answer!").setVisible(true));
-            }
-            else {
+                SwingUtilities.invokeLater(() -> new NotificationFrame("You did not choose the answer!").setVisible(true));
+            } else {
                 TestScreen ts = (TestScreen) PARENT_FRAME.getContentPane().getComponent(0);
                 ts.drawQuestion(chosenIndex == QUESTION.getCorrectAnswerIndex());
             }

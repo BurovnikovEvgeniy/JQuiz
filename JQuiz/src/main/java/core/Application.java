@@ -4,9 +4,6 @@ import model.Question;
 import model.Results;
 import ui.Frame;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Application {
     void start() {
         Frame frame = new Frame();
@@ -23,11 +20,7 @@ public class Application {
 
     public static Question[] getQuestions(int count) {
         Question[] question = new Question[count];
-        List<String> v = new ArrayList<>();
-        v.add("1");
-        v.add("2");
-        v.add("3");
-        v.add("4");
+        String[] v = new String[]{"1", "2", "3", "4"};
         question[0] = new Question("What?", v, 2);
         question[1] = new Question("Why?", v, 0);
         return question;
