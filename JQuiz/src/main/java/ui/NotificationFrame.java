@@ -4,12 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 
 public class NotificationFrame extends JFrame {
-    private static final int WIDTH = 300;
-    private static final int HEIGHT = 150;
 
     NotificationFrame(String message) {
         setTitle("Notification");
-        setSize(WIDTH, HEIGHT);
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Dimension screenSize = toolkit.getScreenSize();
+        int height = (int) (screenSize.height * 0.2);
+        int width = height * 2;
+        setSize(width, height);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);

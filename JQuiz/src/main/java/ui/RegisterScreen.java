@@ -1,24 +1,17 @@
 package ui;
 
-import core.Application;
+import core.LogInManager;
 import model.User;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class RegisterScreen extends JComponent {
-    private final int WIDTH;
-    private final int HEIGHT;
-    private final Color BUTTON_COLOR;
-    private final Dimension COMPONENTS_SIZE;
-    private final JFrame PARENT_FRAME;
+public class RegisterScreen extends BaseScreen {
+    private final int componentX;
 
-    RegisterScreen(int width, int height, Color buttonColor, Dimension componentsSize, JFrame parent) {
-        this.WIDTH = width;
-        this.HEIGHT = height;
-        this.BUTTON_COLOR = buttonColor;
-        this.COMPONENTS_SIZE = componentsSize;
-        this.PARENT_FRAME = parent;
+    RegisterScreen(JFrame parent) {
+        super(parent);
+        this.componentX = (width - componentSize.width) / 2;
         repaint();
     }
 
@@ -26,45 +19,20 @@ public class RegisterScreen extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         setSize(WIDTH, HEIGHT);
-        JTextField loginField = new JTextField(20);
-        loginField.setSize(COMPONENTS_SIZE);
-        loginField.setHorizontalAlignment(SwingConstants.CENTER);
-        loginField.setToolTipText("Введите логин");  //???
-        int posX = ((WIDTH - COMPONENTS_SIZE.width)/2);
-        int posY = (int)(HEIGHT * 0.28);
-        loginField.setLocation(posX, posY);
-        Font font = new Font("TimesRoman", Font.PLAIN, 14);
-        loginField.setFont(font);
+        JTextField loginField = createUserNameField(componentX, (int) (height * 0.28), "Введите логин");
         add(loginField);
-        JPasswordField passwordField = new JPasswordField(20);
-        passwordField.setEchoChar('*');
-        passwordField.setSize(COMPONENTS_SIZE);
-        passwordField.setToolTipText("Введите пароль");  //???
-        passwordField.setHorizontalAlignment(SwingConstants.CENTER);
-        posX = ((WIDTH - COMPONENTS_SIZE.width)/2);
-        posY = (int)(HEIGHT * 0.42);
-        passwordField.setLocation(posX, posY);
-        passwordField.setFont(font);
+        JPasswordField passwordField = createPasswordField(componentX, (int) (height * 0.42));
         add(passwordField);
-        JButton button = new JButton("Зарегистрироваться");
-        button.setBackground(BUTTON_COLOR);
-        button.setSize(COMPONENTS_SIZE);
-        posX = ((WIDTH - COMPONENTS_SIZE.width)/2);
-        posY = (int)(HEIGHT * 0.56);
-        button.setLocation(posX, posY);
-        button.setFont(font);
-        button.setMargin(new Insets(0,0,0,0));
+        JButton button = createButton(componentX, (int) (HEIGHT * 0.56), "Зарегистрироваться");
         button.addActionListener(actionEvent -> {
             String message = "";
-            if (!Application.register(loginField.getText(), new String(passwordField.getPassword()), message)) {
-                SwingUtilities.invokeLater(()->new NotificationFrame(message).setVisible(true));
-            }
-            else {
-                PARENT_FRAME.getContentPane().remove(0);
-                PARENT_FRAME.add(new TestScreen(WIDTH, HEIGHT, BUTTON_COLOR, COMPONENTS_SIZE, PARENT_FRAME,
-                        new User(loginField.getText(), new String(passwordField.getPassword()))));
-                PARENT_FRAME.repaint();
-                PARENT_FRAME.setVisible(true);
+            if (!new LogInManager().register(loginField.getText(), new String(passwordField.getPassword()), message)) {
+                SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
+            } else {
+                parentFrame.getContentPane().remove(0);
+                parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
+                parentFrame.repaint();
+                parentFrame.setVisible(true);
             }
         });
         add(button);

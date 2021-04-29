@@ -2,7 +2,7 @@ import db.QuestionSerializer;
 import db.ResultsSerializer;
 import db.UserSerializer;
 import model.Question;
-import model.Results;
+import model.Result;
 import model.User;
 import org.junit.After;
 import org.junit.Assert;
@@ -24,7 +24,7 @@ public class OldMapDatabaseIT {
 
     private List<User> users;
     private List<Question> questions;
-    private List<Results> results;
+    private List<Result> results;
 
     @Before
     public void before() {
@@ -79,7 +79,7 @@ public class OldMapDatabaseIT {
     @Test
     public void addOneResult() {
         long size = results.size();
-        results.add(new Results("vanya", new Date(), 100));
+        results.add(new Result("vanya", new Date(), 100));
         Assert.assertEquals(size + 1, results.size());
     }
 
@@ -87,9 +87,9 @@ public class OldMapDatabaseIT {
     public void addManyResults() {
         long size = results.size();
 
-        results.add(new Results("vanya", new Date(), 80));
-        results.add(new Results("petya", new Date(), 100));
-        results.add(new Results("masha", new Date(), 120));
+        results.add(new Result("vanya", new Date(), 80));
+        results.add(new Result("petya", new Date(), 100));
+        results.add(new Result("masha", new Date(), 120));
 
         Assert.assertEquals(size + 3, results.size());
     }
@@ -157,9 +157,9 @@ public class OldMapDatabaseIT {
     @Test
     public void findExistingResult() {
         String requiredLogin = "vanya";
-        Results requiredResult = null;
+        Result requiredResult = null;
 
-        for (Results result : results) {
+        for (Result result : results) {
             if (result.getLogin().equals(requiredLogin)) {
                 requiredResult = result;
                 break;
@@ -172,9 +172,9 @@ public class OldMapDatabaseIT {
     @Test
     public void findNotExistingResult() {
         String requiredLogin = "kolya";
-        Results requiredResult = null;
+        Result requiredResult = null;
 
-        for (Results result : results) {
+        for (Result result : results) {
             if (result.getLogin().equals(requiredLogin)) {
                 requiredResult = result;
                 break;
@@ -230,16 +230,16 @@ public class OldMapDatabaseIT {
     public void updateResult() {
 
         String requiredLogin = "vanya";
-        Results newResult = new Results("vanya", new Date(), 50);
+        Result newResult = new Result("vanya", new Date(), 50);
 
-        for (Results result : results) {
+        for (Result result : results) {
             if (result.getLogin().equals(requiredLogin)) {
                 result = newResult;
                 break;
             }
         }
 
-        for (Results result : results) {
+        for (Result result : results) {
             if (result.getLogin().equals(requiredLogin)) {
                 Assert.assertEquals(50, result.getScore());
                 break;
@@ -284,7 +284,7 @@ public class OldMapDatabaseIT {
         long size = results.size();
         String requiredLogin = "vanya";
 
-        for (Results result : results) {
+        for (Result result : results) {
             if (result.getLogin().equals(requiredLogin)) {
                 results.remove(result);
                 break;

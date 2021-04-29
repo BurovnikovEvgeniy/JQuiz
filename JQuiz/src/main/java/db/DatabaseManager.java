@@ -1,7 +1,7 @@
 package db;
 
 import model.Question;
-import model.Results;
+import model.Result;
 import model.User;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -18,7 +18,7 @@ public class DatabaseManager {
 
     private List<User> users;
     private List<Question> questions;
-    private List<Results> results;
+    private List<Result> results;
 
     public DatabaseManager() {
         usersDB = DBMaker.fileDB(new File("src/main/resources/users.db")).make();
@@ -89,12 +89,12 @@ public class DatabaseManager {
         questions.remove(findQuestionIndex(findQuestion(question)));
     }
 
-    public void addResult(Results newResult) {
+    public void addResult(Result newResult) {
         results.add(newResult);
     }
 
-    public Results findResult(String login) {
-        for (Results result : results) {
+    public Result findResult(String login) {
+        for (Result result : results) {
             if (result.getLogin().equals(login)) {
                 return result;
             }
@@ -102,7 +102,7 @@ public class DatabaseManager {
         return null;
     }
 
-    public void updateResult(String login, Results updatedResult) {
+    public void updateResult(String login, Result updatedResult) {
         int i = findResultIndex(findResult(login));
         results.remove(i);
         results.add(i, updatedResult);
@@ -145,7 +145,7 @@ public class DatabaseManager {
         return -1;
     }
 
-    private int findResultIndex(Results result) {
+    private int findResultIndex(Result result) {
         for (int i = 0; i < results.size(); i++) {
             if (results.get(i).getLogin().equals(result.getLogin())
                     && results.get(i).getDate().equals(result.getDate())

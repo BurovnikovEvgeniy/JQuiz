@@ -3,12 +3,12 @@ package model;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Results implements Serializable {
+public class Result implements Serializable {
     private String login;
     private Date date;
     private int score;
 
-    public Results(String login, Date date, boolean[] answers) {
+    public Result(String login, Date date, boolean[] answers) {
         this.login = login;
         this.date = date;
         this.score = 0;
@@ -19,7 +19,7 @@ public class Results implements Serializable {
         }
     }
 
-    public Results(String login, Date date, int score) {
+    public Result(String login, Date date, int score) {
         this.login = login;
         this.date = date;
         this.score = score;

@@ -1,6 +1,6 @@
 import db.DatabaseManager;
 import model.Question;
-import model.Results;
+import model.Result;
 import model.User;
 import org.junit.After;
 import org.junit.Assert;
@@ -83,7 +83,7 @@ public class MapDatabaseIT {
     @Test
     public void addOneResult() {
         long size = databaseManager.getResultsSize();
-        databaseManager.addResult(new Results("vanya", new Date(), 100));
+        databaseManager.addResult(new Result("vanya", new Date(), 100));
         Assert.assertEquals(size + 1, databaseManager.getResultsSize());
     }
 
@@ -91,9 +91,9 @@ public class MapDatabaseIT {
     public void addManyResults() {
         long size = databaseManager.getResultsSize();
 
-        databaseManager.addResult(new Results("vanya", new Date(), 80));
-        databaseManager.addResult(new Results("petya", new Date(), 100));
-        databaseManager.addResult(new Results("masha", new Date(), 120));
+        databaseManager.addResult(new Result("vanya", new Date(), 80));
+        databaseManager.addResult(new Result("petya", new Date(), 100));
+        databaseManager.addResult(new Result("masha", new Date(), 120));
 
         Assert.assertEquals(size + 3, databaseManager.getResultsSize());
     }
@@ -129,14 +129,14 @@ public class MapDatabaseIT {
     @Test
     public void findExistingResult() {
         String requiredLogin = "vanya";
-        Results requiredResult = databaseManager.findResult(requiredLogin);
+        Result requiredResult = databaseManager.findResult(requiredLogin);
         Assert.assertNotNull(requiredResult);
     }
 
     @Test
     public void findNotExistingResult() {
         String requiredLogin = "kolya";
-        Results requiredResult = databaseManager.findResult(requiredLogin);
+        Result requiredResult = databaseManager.findResult(requiredLogin);
         Assert.assertNull(requiredResult);
     }
 
@@ -159,7 +159,7 @@ public class MapDatabaseIT {
     @Test
     public void updateResult() {
         String requiredLogin = "vanya";
-        Results newResult = new Results("vanya", new Date(), 50);
+        Result newResult = new Result("vanya", new Date(), 50);
         databaseManager.updateResult(requiredLogin, newResult);
         Assert.assertEquals(50, databaseManager.findResult(requiredLogin).getScore());
     }

@@ -6,33 +6,24 @@ import model.User;
 import javax.swing.*;
 import java.awt.*;
 
-public class QuestionScreen extends JComponent {
-    private final int WIDTH;
-    private final int HEIGHT;
-    private final Color BUTTON_COLOR;
-    private final Color VARIANT_COLOR;
-    private final Dimension COMPONENTS_SIZE;
-    private final Dimension VARIANT_SIZE = new Dimension(200, 50);
-    private final JFrame PARENT_FRAME;
-    private final int NUMBER;
-    private final int QUESTIONS_COUNT;
-    private final Question QUESTION;
-    private final User USER;
+public class QuestionScreen extends BaseScreen {
+    private final User user;
+    private final Color variantColor;
+    private final Dimension variantSize;
+    private final int serialNumber;
+    private final int questionsCount;
+    private final Question question;
     private final JButton[] variants;
     private int chosenIndex;
 
-    QuestionScreen(int width, int height, Color buttonColor, Color variantColor, Dimension componentsSize, JFrame parent, User user,
-                   int number, int count, Question question) {
-        this.WIDTH = width;
-        this.HEIGHT = height;
-        this.BUTTON_COLOR = buttonColor;
-        this.VARIANT_COLOR = variantColor;
-        this.COMPONENTS_SIZE = componentsSize;
-        this.PARENT_FRAME = parent;
-        this.NUMBER = number;
-        this.QUESTIONS_COUNT = count;
-        this.QUESTION = question;
-        this.USER = user;
+    QuestionScreen(JFrame parent, User user, int number, int count, Question question) {
+        super(parent);
+        this.user = user;
+        this.variantColor = new Color(214, 201, 201);
+        this.variantSize = new Dimension((int) (width * 0.35), (int) (height * 0.13));
+        this.serialNumber = number;
+        this.questionsCount = count;
+        this.question = question;
         this.variants = new JButton[4];
         this.chosenIndex = -1;
     }
@@ -52,31 +43,31 @@ public class QuestionScreen extends JComponent {
         Font font = new Font("TimesRoman", Font.PLAIN, 14);
         g2.setFont(font);
         FontMetrics fm = g2.getFontMetrics();
-        String serialNumber = NUMBER + "/" + QUESTIONS_COUNT;
-        int posX = ((WIDTH - fm.stringWidth(serialNumber)) / 2);
+        String serialNumber = this.serialNumber + "/" + questionsCount;
+        int posX = (width - fm.stringWidth(serialNumber)) / 2;
         int posY = 20;
         g2.drawString(serialNumber, posX, posY);
     }
 
     private void drawQuestion() {
-        JTextArea textArea = new JTextArea(QUESTION.getQuestion());
-        textArea.setSize(2 * VARIANT_SIZE.width, 80);
-        textArea.setBackground(PARENT_FRAME.getContentPane().getBackground());
+        JTextArea textArea = new JTextArea(question.getQuestion());
+        textArea.setSize(2 * variantSize.width, 80);
+        textArea.setBackground(parentFrame.getContentPane().getBackground());
         Font font = new Font("TimesRoman", Font.PLAIN, 16);
         textArea.setFont(font);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        textArea.setLocation((WIDTH - textArea.getSize().width) / 2, 50);
+        textArea.setLocation((width - textArea.getSize().width) / 2, 50);
         add(textArea);
     }
 
     private void drawVariants() {
         for (int i = 0; i < 4; i++) {
-            variants[i] = new JButton(QUESTION.getVariants()[i]);
-            variants[i].setBackground(VARIANT_COLOR);
-            variants[i].setSize(VARIANT_SIZE);
-            int posX = (WIDTH - 2 * VARIANT_SIZE.width - 20) / 2 + (VARIANT_SIZE.width + 20) * (i % 2);
-            int posY = HEIGHT / 2 - VARIANT_SIZE.height + (VARIANT_SIZE.height + 20) * (i / 2);
+            variants[i] = new JButton(question.getVariants()[i]);
+            variants[i].setBackground(variantColor);
+            variants[i].setSize(variantSize);
+            int posX = (width - 2 * variantSize.width - 20) / 2 + (variantSize.width + 20) * (i % 2);
+            int posY = height / 2 - variantSize.height + (variantSize.height + 20) * (i / 2);
             variants[i].setLocation(posX, posY);
             Font font = new Font("TimesRoman", Font.PLAIN, 14);
             variants[i].setFont(font);
@@ -86,7 +77,7 @@ public class QuestionScreen extends JComponent {
                     SwingUtilities.invokeLater(() -> new NotificationFrame("You have already chosen the answer!").setVisible(true));
                 } else {
                     chosenIndex = finalI;
-                    if (finalI == QUESTION.getCorrectAnswerIndex()) {
+                    if (finalI == question.getCorrectAnswerIndex()) {
                         variants[finalI].setBackground(Color.GREEN);
                     } else {
                         variants[finalI].setBackground(Color.RED);
@@ -98,44 +89,30 @@ public class QuestionScreen extends JComponent {
     }
 
     private void drawMenuButton() {
-        JButton menu = new JButton("Главное меню");
-        menu.setBackground(BUTTON_COLOR);
-        menu.setSize(COMPONENTS_SIZE);
-        int posX = 40;
-        int posY = HEIGHT - 20 - 2 * COMPONENTS_SIZE.height;
-        menu.setLocation(posX, posY);
-        Font font = new Font("TimesRoman", Font.PLAIN, 14);
-        menu.setFont(font);
+        JButton menu = createButton(40, height - 20 - 2 * componentSize.height, "Главное меню");
         menu.addActionListener(actionEvent -> {
-            PARENT_FRAME.getContentPane().remove(1);
-            PARENT_FRAME.getContentPane().remove(0);
-            PARENT_FRAME.add(new TestScreen(WIDTH, HEIGHT, BUTTON_COLOR, COMPONENTS_SIZE, PARENT_FRAME, USER));
-            PARENT_FRAME.setVisible(true);
+            parentFrame.getContentPane().remove(1);
+            parentFrame.getContentPane().remove(0);
+            parentFrame.add(new TestScreen(parentFrame, user));
+            parentFrame.setVisible(true);
         });
         add(menu);
     }
 
     private void drawNextButton() {
         JButton nextQuestion;
-        if (NUMBER == QUESTIONS_COUNT) {
-            nextQuestion = new JButton("Завершить");
+        if (serialNumber == questionsCount) {
+            nextQuestion = createButton(width - 40 - componentSize.width, height - 20 - 2 * componentSize.height, "Завершить");
         } else {
-            nextQuestion = new JButton("Следующий вопрос");
+            nextQuestion = createButton(width - 40 - componentSize.width, height - 20 - 2 * componentSize.height,
+                    "Следующий вопрос");
         }
-        nextQuestion.setBackground(BUTTON_COLOR);
-        nextQuestion.setSize(COMPONENTS_SIZE);
-        int posX = WIDTH - 40 - COMPONENTS_SIZE.width;
-        int posY = HEIGHT - 20 - 2 * COMPONENTS_SIZE.height;
-        nextQuestion.setLocation(posX, posY);
-        Font font = new Font("TimesRoman", Font.PLAIN, 14);
-        nextQuestion.setFont(font);
-        nextQuestion.setMargin(new Insets(0, 0, 0, 0));
         nextQuestion.addActionListener(actionEvent -> {
             if (chosenIndex == -1) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame("You did not choose the answer!").setVisible(true));
             } else {
-                TestScreen ts = (TestScreen) PARENT_FRAME.getContentPane().getComponent(0);
-                ts.drawQuestion(chosenIndex == QUESTION.getCorrectAnswerIndex());
+                TestScreen ts = (TestScreen) parentFrame.getContentPane().getComponent(0);
+                ts.drawQuestion(chosenIndex == question.getCorrectAnswerIndex());
             }
         });
         add(nextQuestion);

@@ -1,4 +1,4 @@
-package core;
+import core.Application;
 
 /**
  * Biryukova Marina, Dzutseva Sabina
