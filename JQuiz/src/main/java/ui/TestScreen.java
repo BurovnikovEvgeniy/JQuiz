@@ -53,7 +53,7 @@ public class TestScreen extends BaseScreen {
         JButton showTable = createButton(width / 2 - 20 - componentSize.width, (int) (height * 0.67), "Посмотреть таблицу");
         showTable.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            parentFrame.add(new ResultsTableScreen());
+            parentFrame.add(new ResultsTableScreen(parentFrame, user));  //todo scroll
             parentFrame.setVisible(true);
         });
         add(showTable);

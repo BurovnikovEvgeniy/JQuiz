@@ -17,4 +17,8 @@ public class ResultManager {
         }
         return r;
     }
+
+    public void deleteResult(Result result) {
+
+    }
 }

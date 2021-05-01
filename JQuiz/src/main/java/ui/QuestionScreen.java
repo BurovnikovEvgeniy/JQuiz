@@ -58,12 +58,13 @@ public class QuestionScreen extends BaseScreen {
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setLocation((width - textArea.getSize().width) / 2, 50);
+        textArea.setEditable(false);
         add(textArea);
     }
 
     private void drawVariants() {
         for (int i = 0; i < 4; i++) {
-            variants[i] = new JButton(question.getVariants()[i]);
+            variants[i] = new JButton(question.getAnswers()[i]);
             variants[i].setBackground(variantColor);
             variants[i].setSize(variantSize);
             int posX = (width - 2 * variantSize.width - 20) / 2 + (variantSize.width + 20) * (i % 2);
@@ -74,10 +75,10 @@ public class QuestionScreen extends BaseScreen {
             int finalI = i;
             variants[i].addActionListener(actionEvent -> {
                 if (chosenIndex != -1) {
-                    SwingUtilities.invokeLater(() -> new NotificationFrame("You have already chosen the answer!").setVisible(true));
+                    SwingUtilities.invokeLater(() -> new NotificationFrame("Вы уже выбрали ответ!").setVisible(true));
                 } else {
                     chosenIndex = finalI;
-                    if (finalI == question.getCorrectAnswerIndex()) {
+                    if (finalI == question.getCorrectAnswer()) {
                         variants[finalI].setBackground(Color.GREEN);
                     } else {
                         variants[finalI].setBackground(Color.RED);
@@ -109,10 +110,10 @@ public class QuestionScreen extends BaseScreen {
         }
         nextQuestion.addActionListener(actionEvent -> {
             if (chosenIndex == -1) {
-                SwingUtilities.invokeLater(() -> new NotificationFrame("You did not choose the answer!").setVisible(true));
+                SwingUtilities.invokeLater(() -> new NotificationFrame("Вы не выбрали ответ!").setVisible(true));
             } else {
                 TestScreen ts = (TestScreen) parentFrame.getContentPane().getComponent(0);
-                ts.drawQuestion(chosenIndex == question.getCorrectAnswerIndex());
+                ts.drawQuestion(chosenIndex == question.getCorrectAnswer());
             }
         });
         add(nextQuestion);

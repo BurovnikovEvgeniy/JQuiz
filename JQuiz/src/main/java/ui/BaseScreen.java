@@ -36,6 +36,17 @@ public abstract class BaseScreen extends JComponent {
         return button;
     }
 
+    protected JButton createBackButton() {
+        JButton button = new JButton("Назад");
+        button.setBackground(buttonColor);
+        button.setSize(exitButtonSize);
+        button.setLocation(width - exitButtonSize.width - 20, 20);
+        button.setFont(font);
+        button.setMargin(new Insets(0, 0, 0, 0));
+        return button;
+    }
+
+
     protected void drawExitButton() {
         JButton button = new JButton("Выйти");
         button.setBackground(exitButtonColor);
@@ -54,9 +65,9 @@ public abstract class BaseScreen extends JComponent {
         add(button);
     }
 
-    protected JTextField createUserNameField(int x, int y, String toolTipText) {
-        JTextField textField = new JTextField(20);
-        textField.setSize(componentSize);
+    protected JTextField createTextField(int x, int y, String toolTipText, int symbolNumbers, int width, int height) {
+        JTextField textField = new JTextField(symbolNumbers);
+        textField.setSize(width, height);
         textField.setHorizontalAlignment(SwingConstants.CENTER);
         textField.setToolTipText(toolTipText);
         textField.setLocation(x, y);
@@ -73,5 +84,17 @@ public abstract class BaseScreen extends JComponent {
         passwordField.setLocation(x, y);
         passwordField.setFont(font);
         return passwordField;
+    }
+
+    protected JTextArea createTextArea(String text, int width, int height, int x, int y) {
+        JTextArea textArea = new JTextArea(text);
+        textArea.setFont(font);
+        textArea.setSize(width, height);
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        textArea.setLocation(x, y);
+        textArea.setBackground(parentFrame.getContentPane().getBackground());
+        return textArea;
     }
 }

@@ -18,12 +18,18 @@ public class RegisterScreen extends BaseScreen {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        setSize(WIDTH, HEIGHT);
-        JTextField loginField = createUserNameField(componentX, (int) (height * 0.28), "Введите логин");
+        JTextField loginField = createTextField(
+                componentX,
+                (int) (height * 0.28),
+                "Введите логин",
+                20,
+                componentSize.width,
+                componentSize.height
+        );
         add(loginField);
         JPasswordField passwordField = createPasswordField(componentX, (int) (height * 0.42));
         add(passwordField);
-        JButton button = createButton(componentX, (int) (HEIGHT * 0.56), "Зарегистрироваться");
+        JButton button = createButton(componentX, (int) (height * 0.56), "Зарегистрироваться");
         button.addActionListener(actionEvent -> {
             String message = "";
             if (!new LogInManager().register(loginField.getText(), new String(passwordField.getPassword()), message)) {

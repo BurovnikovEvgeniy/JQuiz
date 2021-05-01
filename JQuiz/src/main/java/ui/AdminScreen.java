@@ -25,7 +25,9 @@ public class AdminScreen extends BaseScreen {
     private void drawShowQuestionsButton() {
         JButton showQuestions = createButton(buttonX, (int) (height * 0.22), "Посмотреть базу вопросов");
         showQuestions.addActionListener(actionEvent -> {
-
+            parentFrame.getContentPane().remove(0);  //todo scroll
+            parentFrame.add(new QuestionsTableScreen(parentFrame));
+            parentFrame.setVisible(true);
         });
         add(showQuestions);
     }
@@ -33,7 +35,9 @@ public class AdminScreen extends BaseScreen {
     private void drawAddQuestionButton() {
         JButton addQuestion = createButton(buttonX, (int) (height * 0.37), "Добавить вопрос");
         addQuestion.addActionListener(actionEvent -> {
-
+            parentFrame.getContentPane().remove(0);  //todo scroll
+            parentFrame.add(new AddQuestionScreen(parentFrame));
+            parentFrame.setVisible(true);
         });
         add(addQuestion);
     }
@@ -41,7 +45,9 @@ public class AdminScreen extends BaseScreen {
     private void drawDeleteQuestionButton() {
         JButton deleteQuestion = createButton(buttonX, (int) (height * 0.52), "Удалить вопрос");
         deleteQuestion.addActionListener(actionEvent -> {
-
+            parentFrame.getContentPane().remove(0);  //todo scroll
+            parentFrame.add(new DeleteQuestionScreen(parentFrame));
+            parentFrame.setVisible(true);
         });
         add(deleteQuestion);
     }
@@ -49,7 +55,9 @@ public class AdminScreen extends BaseScreen {
     private void drawDeleteResultButton() {
         JButton deleteResult = createButton(buttonX, (int) (height * 0.67), "Удалить запись результата");
         deleteResult.addActionListener(actionEvent -> {
-
+            parentFrame.getContentPane().remove(0);  //todo scroll
+            parentFrame.add(new DeleteResultScreen(parentFrame));
+            parentFrame.setVisible(true);
         });
         add(deleteResult);
     }

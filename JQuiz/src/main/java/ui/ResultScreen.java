@@ -26,12 +26,13 @@ public class ResultScreen extends BaseScreen {
         Graphics2D g2 = (Graphics2D) g;
         drawScore(g2);
         if (user == null) {
-            drawMenuButton((width - 2 * componentSize.width - 30) / 2, (int) (height * 0.6));
-            drawRestartButton(width / 2 + 30, (int) (height * 0.6));
+            drawMenuButton((width - 2 * componentSize.width - 40) / 2, (int) (height * 0.6));
+            drawRestartButton(width / 2 + 20, (int) (height * 0.6));
         } else {
-            drawToTableButton((width - 3 * componentSize.width - 60) / 2, (int) (height * 0.6));
-            drawMenuButton((width - 3 * componentSize.width - 60) / 2 + componentSize.width + 30, (int) (height * 0.6));
-            drawRestartButton((width - 3 * componentSize.width - 60) / 2 + 2 * componentSize.width + 60, (int) (height * 0.6));
+            int interval = (width - 10 - 3 * componentSize.width) / 4;
+            drawToTableButton(interval, (int) (height * 0.6));
+            drawMenuButton(componentSize.width + 2 * interval, (int) (height * 0.6));
+            drawRestartButton(2 * componentSize.width + 3 * interval, (int) (height * 0.6));
         }
     }
 
@@ -74,7 +75,7 @@ public class ResultScreen extends BaseScreen {
                 new ResultManager().saveResults(result);
                 isSave = true;
             } else {
-                SwingUtilities.invokeLater(() -> new NotificationFrame("Result has already been saved!").setVisible(true));
+                SwingUtilities.invokeLater(() -> new NotificationFrame("Результат уже сохранен!").setVisible(true));
             }
         });
         add(toTable);

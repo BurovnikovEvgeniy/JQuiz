@@ -19,7 +19,14 @@ class LogInScreen extends BaseScreen {
         Graphics2D g2 = (Graphics2D) g;
         setSize(width, height);
         drawGreetingString(g2);
-        JTextField loginField = createUserNameField((width - componentSize.width) / 2, (int) (height * 0.28), "Введите логин");
+        JTextField loginField = createTextField(
+                (width - componentSize.width) / 2,
+                (int) (height * 0.28),
+                "Введите логин",
+                20,
+                componentSize.width,
+                componentSize.height
+        );
         add(loginField);
         JPasswordField passwordField = createPasswordField((width - componentSize.width) / 2, (int) (height * 0.42));
         add(passwordField);
