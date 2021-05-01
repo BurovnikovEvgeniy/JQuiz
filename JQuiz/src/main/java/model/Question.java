@@ -1,41 +1,28 @@
 package model;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Question implements Serializable {
-    private String question;
-    private String[] variants;
+    private final String question;
+    private final String[] answers;
+    private final int correctAnswer;
+
+    public Question(String question, String[] variants, int correctAnswerIndex) {
+        this.question = question;
+        this.answers = variants;
+        this.correctAnswer = correctAnswerIndex;
+    }
 
     public String getQuestion() {
         return question;
     }
 
-    public void setQuestion(String question) {
-        this.question = question;
+    public String[] getAnswers() {
+        return answers;
     }
 
-    public void setVariants(String[] variants) {
-        this.variants = variants;
+    public int getCorrectAnswer() {
+        return correctAnswer;
     }
 
-    public void setCorrectAnswerIndex(int correctAnswerIndex) {
-        this.correctAnswerIndex = correctAnswerIndex;
-    }
-
-    public String[] getVariants() {
-        return variants;
-    }
-
-    public int getCorrectAnswerIndex() {
-        return correctAnswerIndex;
-    }
-
-    private int correctAnswerIndex;
-
-    public Question(String question, String[] variants, int correctAnswerIndex) {
-        this.question = question;
-        this.variants = variants;
-        this.correctAnswerIndex = correctAnswerIndex;
-    }
 }

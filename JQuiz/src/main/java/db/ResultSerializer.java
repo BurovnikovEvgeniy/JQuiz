@@ -8,12 +8,12 @@ import org.mapdb.Serializer;
 import java.io.IOException;
 import java.io.Serializable;
 
-public class ResultsSerializer implements Serializer<Result>, Serializable {
+public class ResultSerializer implements Serializer<Result>, Serializable {
     @Override
-    public void serialize(DataOutput2 out, Result results) throws IOException {
-        out.writeUTF(results.getLogin());
-        DATE.serialize(out, results.getDate());
-        INTEGER.serialize(out, results.getScore());
+    public void serialize(DataOutput2 out, Result result) throws IOException {
+        out.writeUTF(result.getName());
+        DATE.serialize(out, result.getDate());
+        INTEGER.serialize(out, result.getScore());
     }
 
     @Override

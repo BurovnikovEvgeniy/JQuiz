@@ -1,4 +1,4 @@
-import db.DatabaseManager;
+import core.DatabaseManager;
 import model.Question;
 import model.Result;
 import model.User;
@@ -153,7 +153,7 @@ public class MapDatabaseIT {
         String requiredQuestionText = "How many?";
         Question newQuestion = new Question("How many?", new String[]{"one", "two", "three", "four"}, 3);
         databaseManager.updateQuestion(requiredQuestionText, newQuestion);
-        Assert.assertEquals(3, databaseManager.findQuestion(requiredQuestionText).getCorrectAnswerIndex());
+        Assert.assertEquals(3, databaseManager.findQuestion(requiredQuestionText).getCorrectAnswer());
     }
 
     @Test

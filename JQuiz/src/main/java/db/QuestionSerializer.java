@@ -14,8 +14,8 @@ public class QuestionSerializer implements Serializer<Question>, Serializable {
     public void serialize(DataOutput2 out, Question question) throws IOException {
         out.writeUTF(question.getQuestion());
         SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
-        stringSerializerArray.serialize(out, question.getVariants());
-        out.writeInt(question.getCorrectAnswerIndex());
+        stringSerializerArray.serialize(out, question.getAnswers());
+        out.writeInt(question.getCorrectAnswer());
     }
 
     @Override

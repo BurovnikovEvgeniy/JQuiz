@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class UserSerializer implements Serializer<User>, Serializable {
     @Override
     public void serialize(DataOutput2 out, User user) throws IOException {
-        out.writeUTF(user.getLogin());
+        out.writeUTF(user.getName());
         out.writeUTF(user.getPassword());
     }
 
