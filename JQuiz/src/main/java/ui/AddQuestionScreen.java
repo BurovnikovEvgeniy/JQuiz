@@ -1,7 +1,9 @@
 package ui;
 
+import core.LogInManager;
 import core.QuestionManager;
 import model.Question;
+import model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -72,7 +74,14 @@ public class AddQuestionScreen extends BaseScreen {
             }
             String[] variants = new String[]{fields[1].getText(), fields[2].getText(), fields[3].getText(), fields[4].getText()};
             Question question = new Question(fields[0].getText(), variants, Integer.parseInt(fields[5].getText()));
-            new QuestionManager().addQuestion(question);
+
+            /*new QuestionManager().addQuestion(question);*/
+
+            try {
+                new QuestionManager().addQuestion(question);
+            } catch (RuntimeException e) {
+                SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
+            }
         });
         add(submitButton);
     }

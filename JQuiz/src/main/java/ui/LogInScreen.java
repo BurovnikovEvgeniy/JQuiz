@@ -32,8 +32,25 @@ class LogInScreen extends BaseScreen {
         add(passwordField);
         JButton enterButton = createButton((width - componentSize.width) / 2, (int) (height * 0.56), "Войти");
         enterButton.addActionListener(actionEvent -> {
-            String message = "";
             LogInManager logInManager = new LogInManager();
+            if (logInManager.isAdmin(loginField.getText(), new String(passwordField.getPassword()))) {
+                parentFrame.getContentPane().remove(0);
+                parentFrame.add(new AdminScreen(parentFrame));
+                parentFrame.setVisible(true);
+            } else {
+                try {
+                    new LogInManager().logIn(loginField.getText(), new String(passwordField.getPassword()));
+                    parentFrame.getContentPane().remove(0);
+                    parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
+                    parentFrame.repaint();
+                    parentFrame.setVisible(true);
+                } catch (RuntimeException e) {
+                    SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
+                }
+            }
+
+
+            /*String message = "";
             if (!logInManager.isValidEnteredData(loginField.getText(), new String(passwordField.getPassword()), message)) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
             } else {
@@ -44,7 +61,7 @@ class LogInScreen extends BaseScreen {
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                 }
                 parentFrame.setVisible(true);
-            }
+            }*/
         });
         add(enterButton);
         drawRegisterButton();

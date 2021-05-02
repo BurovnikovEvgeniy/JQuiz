@@ -2,7 +2,6 @@ import core.DatabaseManager;
 import model.Question;
 import model.Result;
 import model.User;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -47,7 +46,11 @@ public class MapDatabaseIT {
     @Test
     public void addOneUser() {
         long size = databaseManager.getUsersSize();
-        databaseManager.addUser(new User("vanya", "qwerty"));
+        try {
+            databaseManager.addUser(new User("vanya", "qwerty"));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(size + 1, databaseManager.getUsersSize());
     }
 
@@ -55,8 +58,12 @@ public class MapDatabaseIT {
     public void addManyUsers() {
         long size = databaseManager.getUsersSize();
 
-        databaseManager.addUser(new User("petya", "1234"));
-        databaseManager.addUser(new User("masha", "hrGS9SbWze"));
+        try {
+            databaseManager.addUser(new User("petya", "1234"));
+            databaseManager.addUser(new User("masha", "hrGS9SbWze"));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
 
         Assert.assertEquals(size + 2, databaseManager.getUsersSize());
     }
@@ -64,7 +71,11 @@ public class MapDatabaseIT {
     @Test
     public void addOneQuestion() {
         long size = databaseManager.getQuestionsSize();
-        databaseManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
+        try {
+            databaseManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
         Assert.assertEquals(size + 1, databaseManager.getQuestionsSize());
     }
 
@@ -72,10 +83,14 @@ public class MapDatabaseIT {
     public void addManyQuestions() {
         long size = databaseManager.getQuestionsSize();
 
-        databaseManager.addQuestion(new Question("Question1?", new String[]{"one", "two", "three", "four"}, 2));
-        databaseManager.addQuestion(new Question("Question2?", new String[]{"one", "two", "three", "four"}, 1));
-        databaseManager.addQuestion(new Question("Question3?", new String[]{"one", "two", "three", "four"}, 4));
-        databaseManager.addQuestion(new Question("Question4?", new String[]{"one", "two", "three", "four"}, 1));
+        try {
+            databaseManager.addQuestion(new Question("Question1?", new String[]{"one", "two", "three", "four"}, 2));
+            databaseManager.addQuestion(new Question("Question2?", new String[]{"one", "two", "three", "four"}, 1));
+            databaseManager.addQuestion(new Question("Question3?", new String[]{"one", "two", "three", "four"}, 4));
+            databaseManager.addQuestion(new Question("Question4?", new String[]{"one", "two", "three", "four"}, 1));
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
 
         Assert.assertEquals(size + 4, databaseManager.getQuestionsSize());
     }
@@ -189,8 +204,4 @@ public class MapDatabaseIT {
         Assert.assertEquals(size - 1, databaseManager.getResultsSize());
     }
 
-    @After
-    public void after() {
-        databaseManager.close();
-    }
 }

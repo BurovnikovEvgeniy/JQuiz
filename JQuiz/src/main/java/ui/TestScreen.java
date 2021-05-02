@@ -19,8 +19,10 @@ public class TestScreen extends BaseScreen {
     TestScreen(JFrame parent, User user) {
         super(parent);
         this.user = user;
-        this.questionsCount = 2;
-        this.questions = new QuestionManager().getQuestions(questionsCount);
+        /*this.questionsCount = 2;
+        this.questions = new QuestionManager().getQuestions(questionsCount);*/
+        this.questions = new QuestionManager().getAllQuestions();
+        this.questionsCount = this.questions.length;
         this.answers = new boolean[questionsCount];
         currentQuestion = 0;
     }
@@ -78,7 +80,7 @@ public class TestScreen extends BaseScreen {
             currentQuestion++;
         } else {
             answers[currentQuestion - 1] = answer;
-            Result result = new Result("", new Date(), answers);
+            Result result = new Result(user.getName(), new Date(), answers); //"" -> user.getName() выводилось пустое имя
             parentFrame.getContentPane().remove(1);
             parentFrame.getContentPane().remove(0);
             parentFrame.add(new ResultScreen(parentFrame, user, result, questionsCount));

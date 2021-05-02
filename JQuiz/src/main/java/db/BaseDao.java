@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class BaseDao {
+public abstract class BaseDao {
     protected final String pathToDbs = System.getProperty("user.home") + "/JQuiz/db";
 
     public BaseDao() {

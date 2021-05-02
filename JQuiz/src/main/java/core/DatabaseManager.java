@@ -8,10 +8,9 @@ import model.Result;
 import model.User;
 
 public class DatabaseManager {
-
-    UserDao userDao;
-    QuestionDao questionDao;
-    ResultDao resultDao;
+    private final UserDao userDao;
+    private final QuestionDao questionDao;
+    private final ResultDao resultDao;
 
     public DatabaseManager() {
         userDao = new UserDao();
@@ -19,13 +18,10 @@ public class DatabaseManager {
         resultDao = new ResultDao();
     }
 
-    public void close() {
-        userDao.close();
-        questionDao.close();
-        resultDao.close();
-    }
-
-    public void addUser(User newUser) {
+    public void addUser(User newUser) throws RuntimeException {
+        if (userDao.contains(newUser)) {
+            throw new RuntimeException("User already exists in db");
+        }
         userDao.addUser(newUser);
     }
 
@@ -46,7 +42,10 @@ public class DatabaseManager {
     }
 
 
-    public void addQuestion(Question newQuestion) {
+    public void addQuestion(Question newQuestion) throws RuntimeException {
+        if (questionDao.contains(newQuestion)) {
+            throw new RuntimeException("Question already exists in db");
+        }
         questionDao.addQuestion(newQuestion);
     }
 
@@ -66,9 +65,15 @@ public class DatabaseManager {
         return questionDao.getSize();
     }
 
+    public Question[] getAllQuestions() {
+        return questionDao.getAll();
+    }
+
 
     public void addResult(Result newResult) {
-        resultDao.addResult(newResult);
+        if (!resultDao.contains(newResult)) {
+            resultDao.addResult(newResult);
+        }
     }
 
     public Result findResult(String name) {
@@ -85,5 +90,9 @@ public class DatabaseManager {
 
     public long getResultsSize() {
         return resultDao.getSize();
+    }
+
+    public Result[] getAllResults() {
+        return resultDao.getAll();
     }
 }

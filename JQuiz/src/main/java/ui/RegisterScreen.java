@@ -31,7 +31,16 @@ public class RegisterScreen extends BaseScreen {
         add(passwordField);
         JButton button = createButton(componentX, (int) (height * 0.56), "Зарегистрироваться");
         button.addActionListener(actionEvent -> {
-            String message = "";
+            try {
+                new LogInManager().register(loginField.getText(), new String(passwordField.getPassword()));
+                parentFrame.getContentPane().remove(0);
+                parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
+                parentFrame.repaint();
+                parentFrame.setVisible(true);
+            } catch (RuntimeException e) {
+                SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
+            }
+            /*String message = "";
             if (!new LogInManager().register(loginField.getText(), new String(passwordField.getPassword()), message)) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
             } else {
@@ -39,7 +48,7 @@ public class RegisterScreen extends BaseScreen {
                 parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                 parentFrame.repaint();
                 parentFrame.setVisible(true);
-            }
+            }*/
         });
         add(button);
     }

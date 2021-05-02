@@ -1,15 +1,39 @@
 package core;
 
+import model.User;
+
 public class LogInManager {
-    public boolean isValidEnteredData(String login, String password, String message) {
-        return password.length() != 0 && login.length() != 0;
+
+    DatabaseManager databaseManager;
+
+    public LogInManager() {
+        this.databaseManager = new DatabaseManager();
     }
 
-    public boolean register(String login, String password, String message) {
-        return password.length() != 0 && login.length() != 0;
+    public void logIn(String username, String password) throws RuntimeException {
+        if (password.length() != 0 && username.length() != 0) {
+            User user = databaseManager.findUser(username);
+            if (user != null) {
+                if (user.getPassword().equals(password)) {
+                    throw new RuntimeException("Wrong password! Try again!");
+                }
+            } else {
+                throw new RuntimeException("User with this name does not exist. Try to register first");
+            }
+        } else {
+            throw new RuntimeException("One or both fields are empty. Try again");
+        }
     }
 
-    public boolean isAdmin(String login, String password) {
-        return login.equals("admin") && password.equals("admin");
+    public void register(String username, String password) throws RuntimeException {
+        if (password.length() != 0 && username.length() != 0) {
+            databaseManager.addUser(new User(username, password));
+        } else {
+            throw new RuntimeException("One or both fields are empty. Try again");
+        }
+    }
+
+    public boolean isAdmin(String username, String password) {
+        return username.equals("admin") && password.equals("admin");
     }
 }
