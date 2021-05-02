@@ -125,7 +125,7 @@ public class QuestionsTableScreen extends BaseScreen {
     private void drawCorrectIndex(Graphics2D g2, Question question) {
         FontMetrics fm = g2.getFontMetrics();
         JTextArea textArea = createTextArea(
-                String.valueOf(question.getCorrectAnswer()),
+                String.valueOf(question.getCorrectAnswer() + 1),
                 correctAnswerFieldWidth - 2 * margin,
                 fm.getHeight(),
                 margin + questionFieldWidth + answerFieldWidth * 4,
