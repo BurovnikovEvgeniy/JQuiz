@@ -18,6 +18,7 @@ public class RegisterScreen extends BaseScreen {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        drawBackButton();
         JTextField loginField = createTextField(
                 componentX,
                 (int) (height * 0.28),
@@ -51,5 +52,15 @@ public class RegisterScreen extends BaseScreen {
             }*/
         });
         add(button);
+    }
+
+    private void drawBackButton() {
+        JButton backButton = createBackButton();
+        backButton.addActionListener(actionEvent -> {
+            parentFrame.getContentPane().remove(0);
+            parentFrame.add(new LogInScreen(parentFrame));
+            parentFrame.setVisible(true);
+        });
+        add(backButton);
     }
 }
