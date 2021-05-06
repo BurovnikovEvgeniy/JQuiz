@@ -68,6 +68,13 @@ public class TestScreen extends BaseScreen {
     }
 
     void drawQuestion(boolean answer) {
+
+        if (questionsCount == 0) {
+            String message = "No questions in database";
+            SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
+            return;
+        }
+
         if (currentQuestion < questionsCount) {
             if (currentQuestion > 0) {
                 answers[currentQuestion - 1] = answer;
