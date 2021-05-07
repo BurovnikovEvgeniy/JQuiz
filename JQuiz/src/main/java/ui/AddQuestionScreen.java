@@ -20,7 +20,7 @@ public class AddQuestionScreen extends BaseScreen {
         super(parent);
         this.margin = 10;
         this.descriptionWidth = (int) (width * 0.2);
-        this.textAreaSize = new Dimension(width - descriptionWidth - 4 * this.margin, (int) (height * 0.05));
+        this.textAreaSize = new Dimension(width - descriptionWidth - 4 * this.margin, (int) (height * 0.07));
         this.descriptions = new String[]{"Вопрос", "Вариант 1", "Вариант 2", "Вариант 3", "Вариант 4", "Верный индекс"};
         this.fields = new JTextField[descriptions.length];
         this.questionManager = questionManager;

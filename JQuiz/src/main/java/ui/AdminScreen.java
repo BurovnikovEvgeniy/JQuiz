@@ -73,7 +73,7 @@ public class AdminScreen extends BaseScreen {
         JButton addQuestion = createButton(buttonX, (int) (height * 0.37), "Добавить вопрос");
         addQuestion.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            addScrollScreen(new AddQuestionScreen(parentFrame, questionManager));
+            parentFrame.add(new AddQuestionScreen(parentFrame, questionManager));
             parentFrame.setVisible(true);
         });
         add(addQuestion);
