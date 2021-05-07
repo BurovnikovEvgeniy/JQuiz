@@ -1,17 +1,9 @@
 package db;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
 public abstract class BaseDao {
-    protected final String pathToDbs = System.getProperty("user.home") + "/JQuiz/db";
+    protected static String pathToDbs;
 
-    public BaseDao() {
-        try {
-            Files.createDirectories(Paths.get(pathToDbs));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public BaseDao(String pathToDbs) {
+        BaseDao.pathToDbs = pathToDbs;
     }
 }

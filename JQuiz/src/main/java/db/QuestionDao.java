@@ -1,16 +1,42 @@
 package db;
 
 import model.Question;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.mapdb.*;
+import org.mapdb.serializer.SerializerArray;
 
 import java.io.File;
-import java.util.Arrays;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 public class QuestionDao extends BaseDao {
+
+    private static class QuestionSerializer implements Serializer<Question>, Serializable {
+        @Override
+        public void serialize(DataOutput2 out, Question question) throws IOException {
+            out.writeUTF(question.getQuestion());
+            SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
+            stringSerializerArray.serialize(out, question.getAnswers());
+            out.writeInt(question.getCorrectAnswer());
+        }
+
+        @Override
+        public Question deserialize(DataInput2 in, int i) throws IOException {
+            String question = in.readUTF();
+            SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
+            String[] variants = stringSerializerArray.deserialize(in, i);
+            int index = in.readInt();
+
+            return new Question(question, variants, index);
+        }
+    }
+
     private List<Question> questions;
     private DB questionsDB;
+
+    public QuestionDao(String pathToDbs) {
+        super(pathToDbs);
+    }
 
     public void addQuestion(Question newQuestion) {
         open();
@@ -20,21 +46,21 @@ public class QuestionDao extends BaseDao {
 
     public Question findQuestion(String question) {
         open();
+        Question q = null;
         for (Question question1 : questions) {
             if (question1.getQuestion().equals(question)) {
-                close();
-                return question1;
+                q = question1;
+                break;
             }
         }
         close();
-        return null;
+        return q;
     }
 
     public void updateQuestion(String question, Question updatedQuestion) {
         int i = findQuestionIndex(findQuestion(question));
         open();
-        questions.remove(i);
-        questions.add(i, updatedQuestion);
+        questions.set(i, updatedQuestion);
         close();
     }
 
@@ -47,55 +73,37 @@ public class QuestionDao extends BaseDao {
 
     public long getSize() {
         open();
-        long size =  questions.size();
+        long size = questions.size();
         close();
         return size;
     }
 
-    public Question[] get(int n) {
-        open();
-        Question[] result = new Question[n];
-        for (int i = 0; i < n; i++) {
-            result[i] = questions.get(i);
-        }
-        close();
-        return result;
-    }
-
     public Question[] getAll() {
         open();
-        Question[] result = new Question[questions.size()];
-        for (int i = 0; i < questions.size(); i++) {
-            result[i] = questions.get(i);
-        }
+        Question[] result = new Question[0];
+        result = questions.toArray(result);
         close();
         return result;
     }
 
     public boolean contains(Question question) {
         open();
+        boolean contains = false;
         for (Question q : questions) {
             if (q.getQuestion().equals(question.getQuestion())) {
-                close();
-                return true;
+                contains = true;
+                break;
             }
         }
         close();
-        return false;
+        return contains;
     }
 
     private int findQuestionIndex(Question question) {
         open();
-        for (int i = 0; i < questions.size(); i++) {
-            if (questions.get(i).getQuestion().equals(question.getQuestion())
-                    && Arrays.equals(questions.get(i).getAnswers(), question.getAnswers())
-                    && questions.get(i).getCorrectAnswer() == question.getCorrectAnswer()) {
-                close();
-                return i;
-            }
-        }
+        int index = questions.indexOf(question);
         close();
-        return -1;
+        return index;
     }
 
     private void open() {

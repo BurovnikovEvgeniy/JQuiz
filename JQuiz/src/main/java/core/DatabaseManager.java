@@ -1,5 +1,7 @@
 package core;
 
+import core.exceptions.QuestionAlreadyExists;
+import core.exceptions.UserAlreadyExistsException;
 import db.QuestionDao;
 import db.ResultDao;
 import db.UserDao;
@@ -7,20 +9,30 @@ import model.Question;
 import model.Result;
 import model.User;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class DatabaseManager {
     private final UserDao userDao;
     private final QuestionDao questionDao;
     private final ResultDao resultDao;
 
+    private final String pathToDbs = System.getProperty("user.home") + "/JQuiz/db";
+
     public DatabaseManager() {
-        userDao = new UserDao();
-        questionDao = new QuestionDao();
-        resultDao = new ResultDao();
+        userDao = new UserDao(pathToDbs);
+        questionDao = new QuestionDao(pathToDbs);
+        resultDao = new ResultDao(pathToDbs);
+    }
+
+    public void createDbDirectory() throws IOException {
+        Files.createDirectories(Paths.get(pathToDbs));
     }
 
     public void addUser(User newUser) throws RuntimeException {
         if (userDao.contains(newUser)) {
-            throw new RuntimeException("Пользователь с таким именем уже существует!");
+            throw new UserAlreadyExistsException("Пользователь с таким именем уже существует!");
         }
         userDao.addUser(newUser);
     }
@@ -44,7 +56,7 @@ public class DatabaseManager {
 
     public void addQuestion(Question newQuestion) throws RuntimeException {
         if (questionDao.contains(newQuestion)) {
-            throw new RuntimeException("Такой вопрос уже существует!");
+            throw new QuestionAlreadyExists("Такой вопрос уже существует!");
         }
         questionDao.addQuestion(newQuestion);
     }

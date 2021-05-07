@@ -3,6 +3,7 @@ package core;
 import model.Result;
 
 public class ResultManager {
+
     private final DatabaseManager databaseManager;
 
     public ResultManager() {

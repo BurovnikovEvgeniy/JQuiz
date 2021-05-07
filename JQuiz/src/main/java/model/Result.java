@@ -1,5 +1,6 @@
 package model;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -38,5 +39,13 @@ public class Result implements Serializable {
 
     public int getScore() {
         return score;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Result result = (Result) o;
+        return score == result.score && name.equals(result.name) && date.equals(result.date);
     }
 }

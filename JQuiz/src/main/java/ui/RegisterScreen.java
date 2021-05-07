@@ -1,6 +1,7 @@
 package ui;
 
 import core.LogInManager;
+import core.exceptions.UserException;
 import model.User;
 
 import javax.swing.*;
@@ -66,7 +67,7 @@ public class RegisterScreen extends BaseScreen {
                 }
                 parentFrame.repaint();
                 parentFrame.setVisible(true);
-            } catch (RuntimeException e) {
+            } catch (UserException e) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
             }
         });

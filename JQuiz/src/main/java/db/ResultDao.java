@@ -1,16 +1,35 @@
 package db;
 
 import model.Result;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.mapdb.*;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 public class ResultDao extends BaseDao {
+
+    public static class ResultSerializer implements Serializer<Result>, Serializable {
+        @Override
+        public void serialize(DataOutput2 out, Result result) throws IOException {
+            out.writeUTF(result.getName());
+            DATE.serialize(out, result.getDate());
+            INTEGER.serialize(out, result.getScore());
+        }
+
+        @Override
+        public Result deserialize(DataInput2 in, int i) throws IOException {
+            return new Result(in.readUTF(), DATE.deserialize(in, i), INTEGER.deserialize(in, i));
+        }
+    }
+
     private List<Result> results;
     private DB resultsDB;
+
+    public ResultDao(String pathToDbs) {
+        super(pathToDbs);
+    }
 
     public void addResult(Result newResult) {
         open();
@@ -20,33 +39,21 @@ public class ResultDao extends BaseDao {
 
     public Result findResult(String name) {
         open();
-        for (Result result : results) {
-            if (result.getName().equals(name)) {
-                close();
-                return result;
+        Result result = null;
+        for (Result r : results) {
+            if (r.getName().equals(name)) {
+                result = r;
+                break;
             }
         }
         close();
-        return null;
-    }
-
-    public Result[] findAllResults(String name) {
-        open();
-        ArrayList<Result> resultArrayList = new ArrayList<>();
-        for (Result result : results) {
-            if (result.getName().equals(name)) {
-                resultArrayList.add(result);
-            }
-        }
-        close();
-        return (Result[]) resultArrayList.toArray();
+        return result;
     }
 
     public void updateResult(String name, Result updatedResult) {
         int i = findResultIndex(findResult(name));
         open();
-        results.remove(i);
-        results.add(i, updatedResult);
+        results.set(i, updatedResult);
         close();
     }
 
@@ -76,23 +83,16 @@ public class ResultDao extends BaseDao {
 
     public boolean contains(Result result) {
         open();
-        boolean doesContain = results.contains(result);
+        boolean contains = results.contains(result);
         close();
-        return doesContain;
+        return contains;
     }
 
     private int findResultIndex(Result result) {
         open();
-        for (int i = 0; i < results.size(); i++) {
-            if (results.get(i).getName().equals(result.getName())
-                    && results.get(i).getDate().equals(result.getDate())
-                    && results.get(i).getScore() == result.getScore()) {
-                close();
-                return i;
-            }
-        }
+        int index = results.indexOf(result);
         close();
-        return -1;
+        return index;
     }
 
     private void open() {

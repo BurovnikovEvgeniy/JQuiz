@@ -101,7 +101,7 @@ public class TestScreen extends BaseScreen {
     void drawQuestion(boolean answer) {
 
         if (questionsCount == 0) {
-            String message = "No questions in database";
+            String message = "В тесте нет вопросов!";
             SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
             return;
         }
@@ -118,7 +118,7 @@ public class TestScreen extends BaseScreen {
             currentQuestion++;
         } else {
             answers[currentQuestion - 1] = answer;
-            Result result = new Result(user.getName(), new Date(), answers); //"" -> user.getName() выводилось пустое имя
+            Result result = new Result(user.getName(), new Date(), answers);
             parentFrame.getContentPane().remove(1);
             parentFrame.getContentPane().remove(0);
             parentFrame.add(new ResultScreen(parentFrame, user, result, questionsCount));

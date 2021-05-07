@@ -1,6 +1,8 @@
 package ui;
 
 import core.LogInManager;
+import core.exceptions.NullFieldsException;
+import core.exceptions.UserException;
 import model.User;
 
 import javax.swing.*;
@@ -55,7 +57,9 @@ class LogInScreen extends BaseScreen {
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                     parentFrame.repaint();
                     parentFrame.setVisible(true);
-                } catch (RuntimeException e) {
+                } catch (NullFieldsException e) {
+                    System.out.println(e.getMessage());
+                } catch (UserException e) {
                     SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
                 }
             }

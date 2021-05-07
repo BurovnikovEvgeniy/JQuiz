@@ -1,6 +1,7 @@
 package ui;
 
 import core.LogInManager;
+import core.exceptions.WrongPasswordException;
 import model.User;
 
 import javax.swing.*;
@@ -41,14 +42,18 @@ public class ChangePasswordScreen extends BaseScreen {
         JButton submitButton = createButton((width - componentSize.width) / 2, (int) (height * 0.56), "Подтвердить");
         submitButton.addActionListener(actionEvent -> {
             if (user.getPassword().equals(new String(oldPassword.getPassword()))) {
-                logInManager.changePassword(user.getName(), new String(newPassword.getPassword()));
-                parentFrame.getContentPane().remove(0);
-                if (logInManager.isAdmin(user.getName(), user.getPassword())) {
-                    parentFrame.add(new AdminScreen(parentFrame));
-                } else {
-                    parentFrame.add(new TestScreen(parentFrame, user));
+                try {
+                    logInManager.changePassword(user.getName(), new String(newPassword.getPassword()));
+                    parentFrame.getContentPane().remove(0);
+                    if (logInManager.isAdmin(user.getName(), user.getPassword())) {
+                        parentFrame.add(new AdminScreen(parentFrame));
+                    } else {
+                        parentFrame.add(new TestScreen(parentFrame, user));
+                    }
+                    parentFrame.setVisible(true);
+                } catch (WrongPasswordException e) {
+                    SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
                 }
-                parentFrame.setVisible(true);
             } else {
                 SwingUtilities.invokeLater(() -> new NotificationFrame("Текущий пароль введен неверно!").setVisible(true));
             }

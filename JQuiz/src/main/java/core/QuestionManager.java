@@ -4,7 +4,7 @@ import model.Question;
 
 public class QuestionManager {
 
-    DatabaseManager databaseManager;
+    private final DatabaseManager databaseManager;
 
     public QuestionManager() {
         this.databaseManager = new DatabaseManager();

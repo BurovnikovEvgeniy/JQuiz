@@ -1,15 +1,34 @@
 package db;
 
 import model.User;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import org.mapdb.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
 
 public class UserDao extends BaseDao {
+
+    public static class UserSerializer implements Serializer<User>, Serializable {
+        @Override
+        public void serialize(DataOutput2 out, User user) throws IOException {
+            out.writeUTF(user.getName());
+            out.writeUTF(user.getPassword());
+        }
+
+        @Override
+        public User deserialize(DataInput2 in, int i) throws IOException {
+            return new User(in.readUTF(), in.readUTF());
+        }
+    }
+
     private DB usersDB;
     private List<User> users;
+
+    public UserDao(String pathToDbs) {
+        super(pathToDbs);
+    }
 
     public void addUser(User newUser) {
         open();
@@ -20,21 +39,21 @@ public class UserDao extends BaseDao {
 
     public User findUser(String name) {
         open();
-        for (User user : users) {
-            if (user.getName().equals(name)) {
-                close();
-                return user;
+        User user = null;
+        for (User u : users) {
+            if (u.getName().equals(name)) {
+                user = u;
+                break;
             }
         }
         close();
-        return null;
+        return user;
     }
 
     public void updateUser(String name, User updatedUser) {
         int i = findUserIndex(findUser(name));
         open();
-        users.remove(i);
-        users.add(i, updatedUser);
+        users.set(i, updatedUser);
         close();
     }
 
@@ -54,27 +73,22 @@ public class UserDao extends BaseDao {
 
     public boolean contains(User user) {
         open();
+        boolean contains = false;
         for (User u : users) {
             if (u.getName().equals(user.getName())) {
-                close();
-                return true;
+                contains = true;
+                break;
             }
         }
         close();
-        return false;
+        return contains;
     }
 
     private int findUserIndex(User user) {
         open();
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).getName().equals(user.getName())
-                    && users.get(i).getPassword().equals(user.getPassword())) {
-                close();
-                return i;
-            }
-        }
+        int index = users.indexOf(user);
         close();
-        return -1;
+        return index;
     }
 
     private void open() {
