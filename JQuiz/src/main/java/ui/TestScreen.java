@@ -14,32 +14,63 @@ public class TestScreen extends BaseScreen {
     private final int questionsCount;
     private final Question[] questions;
     private final boolean[] answers;
+    private final String[] items;
     private int currentQuestion;
 
     TestScreen(JFrame parent, User user) {
         super(parent);
         this.user = user;
-        /*this.questionsCount = 2;
-        this.questions = new QuestionManager().getQuestions(questionsCount);*/
-        this.questions = new QuestionManager().getAllQuestions();
+        QuestionManager questionManager = new QuestionManager();
+        this.questions = questionManager.getAllQuestions();
         this.questionsCount = this.questions.length;
         this.answers = new boolean[questionsCount];
+        this.items = new String[]{"Сменить пароль"};
         currentQuestion = 0;
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        drawSettingsBox();
+        drawUsername(g2);
         drawExitButton();
         drawGreetingString(g2);
         drawShowTableButton();
         drawStartTestButton();
     }
 
+    private void drawSettingsBox() {
+        JComboBox comboBox = new JComboBox(items);
+        comboBox.setToolTipText("Настройки");
+        comboBox.setFont(font14);
+        comboBox.addActionListener(actionEvent -> {
+            JComboBox box = (JComboBox) actionEvent.getSource();
+            String item = (String) box.getSelectedItem();
+            if (item != null && item.equals("Сменить пароль")) {
+                parentFrame.getContentPane().remove(0);
+                parentFrame.add(new ChangePasswordScreen(parentFrame, user));
+                parentFrame.setVisible(true);
+            }
+        });
+        FontMetrics fm = getFontMetrics(font14);
+        comboBox.setLocation(usernameX + fm.stringWidth(user == null ? "Гостевой режим" : user.getName()) + 10, 0);
+        comboBox.setSize(fm.stringWidth(items[0] + 20), 20);
+        add(comboBox);
+    }
+
+    private void drawUsername(Graphics2D g2) {
+        g2.setFont(font14);
+        if (user == null) {
+            g2.drawString("Гостевой режим", usernameX, usernameY);
+        } else {
+            g2.drawString(user.getName(), usernameX, usernameY);
+        }
+    }
+
     private void drawGreetingString(Graphics2D g2) {
-        Font font = new Font("TimesRoman", Font.PLAIN, 20);
-        g2.setFont(font);
+        g2.setFont(font20);
         FontMetrics fm = g2.getFontMetrics();
         String greeting = "Проверь свои знания языка программирования";
         int x = ((width - fm.stringWidth(greeting)) / 2);
@@ -55,7 +86,7 @@ public class TestScreen extends BaseScreen {
         JButton showTable = createButton(width / 2 - 20 - componentSize.width, (int) (height * 0.67), "Посмотреть таблицу");
         showTable.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            parentFrame.add(new ResultsTableScreen(parentFrame, user));  //todo scroll
+            addScrollScreen(new ResultsTableScreen(parentFrame, user));
             parentFrame.setVisible(true);
         });
         add(showTable);

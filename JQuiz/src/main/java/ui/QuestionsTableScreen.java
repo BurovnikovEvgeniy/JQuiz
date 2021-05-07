@@ -16,9 +16,9 @@ public class QuestionsTableScreen extends BaseScreen {
     private int currentHeight;
     private int currentCellHeight;
 
-    QuestionsTableScreen(JFrame parent) {
+    QuestionsTableScreen(JFrame parent, QuestionManager questionManager) {
         super(parent);
-        this.questions = new QuestionManager().getAllQuestions();
+        this.questions = questionManager.getAllQuestions();
         this.questionFieldWidth = (int) (width * 0.25);
         this.answerFieldWidth = (int) (width * 0.6) / 4;
         this.correctAnswerFieldWidth = width - questionFieldWidth - answerFieldWidth * 4;
@@ -26,12 +26,14 @@ public class QuestionsTableScreen extends BaseScreen {
         this.margin = 5;
         this.currentHeight = exitButtonSize.height + 30;
         this.currentCellHeight = 30;
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        drawUsername(g2);
         drawBackButton();
         drawTableHeader(g2);
         for (Question question : questions) {
@@ -39,6 +41,11 @@ public class QuestionsTableScreen extends BaseScreen {
         }
         currentHeight = exitButtonSize.height + 30;
         currentCellHeight = 30;
+    }
+
+    private void drawUsername(Graphics2D g2) {
+        g2.setFont(font14);
+        g2.drawString("Администратор", usernameX, usernameY);
     }
 
     private void drawBackButton() {
@@ -55,10 +62,10 @@ public class QuestionsTableScreen extends BaseScreen {
         g2.setStroke(new BasicStroke(stroke));
         g2.drawLine(0, currentHeight, width, currentHeight);
         String name = "Вопрос";
-        g2.setFont(font);
+        g2.setFont(font14);
         FontMetrics fm = g2.getFontMetrics();
         int x = (questionFieldWidth - fm.stringWidth(name)) / 2;
-        int y = currentHeight + currentCellHeight - (currentCellHeight - font.getSize()) / 2;
+        int y = currentHeight + currentCellHeight - (currentCellHeight - font14.getSize()) / 2;
         g2.drawString(name, x, y);
         for (int i = 0; i < 4; i++) {
             name = "Вариант " + (i + 1);

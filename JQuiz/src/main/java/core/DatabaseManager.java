@@ -20,7 +20,7 @@ public class DatabaseManager {
 
     public void addUser(User newUser) throws RuntimeException {
         if (userDao.contains(newUser)) {
-            throw new RuntimeException("User already exists in db");
+            throw new RuntimeException("Пользователь с таким именем уже существует!");
         }
         userDao.addUser(newUser);
     }
@@ -44,7 +44,7 @@ public class DatabaseManager {
 
     public void addQuestion(Question newQuestion) throws RuntimeException {
         if (questionDao.contains(newQuestion)) {
-            throw new RuntimeException("Question already exists in db");
+            throw new RuntimeException("Такой вопрос уже существует!");
         }
         questionDao.addQuestion(newQuestion);
     }

@@ -18,6 +18,7 @@ public class ResultScreen extends BaseScreen {
         this.user = user;
         this.result = results;
         this.questionsCount = count;
+        repaint();
     }
 
     @Override
@@ -37,8 +38,7 @@ public class ResultScreen extends BaseScreen {
     }
 
     private void drawScore(Graphics2D g2) {
-        Font font = new Font("TimesRoman", Font.PLAIN, 32);
-        g2.setFont(font);
+        g2.setFont(font32);
         FontMetrics fm = g2.getFontMetrics();
         String score = result.getScore() + "/" + questionsCount + "!";
         int posX = ((width - fm.stringWidth(score)) / 2);

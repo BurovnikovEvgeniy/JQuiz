@@ -17,8 +17,13 @@ class LogInScreen extends BaseScreen {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        setSize(width, height);
         drawGreetingString(g2);
+        String description = "Логин:";
+        drawDescription(
+                g2,
+                description,
+                (int) (height * 0.28) + componentSize.height / 2
+        );
         JTextField loginField = createTextField(
                 (width - componentSize.width) / 2,
                 (int) (height * 0.28),
@@ -28,6 +33,12 @@ class LogInScreen extends BaseScreen {
                 componentSize.height
         );
         add(loginField);
+        description = "Пароль:";
+        drawDescription(
+                g2,
+                description,
+                (int) (height * 0.42) + componentSize.height / 2
+        );
         JPasswordField passwordField = createPasswordField((width - componentSize.width) / 2, (int) (height * 0.42));
         add(passwordField);
         JButton enterButton = createButton((width - componentSize.width) / 2, (int) (height * 0.56), "Войти");
@@ -48,20 +59,6 @@ class LogInScreen extends BaseScreen {
                     SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
                 }
             }
-
-
-            /*String message = "";
-            if (!logInManager.isValidEnteredData(loginField.getText(), new String(passwordField.getPassword()), message)) {
-                SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
-            } else {
-                parentFrame.getContentPane().remove(0);
-                if (logInManager.isAdmin(loginField.getText(), new String(passwordField.getPassword()))) {
-                    parentFrame.add(new AdminScreen(parentFrame));
-                } else {
-                    parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
-                }
-                parentFrame.setVisible(true);
-            }*/
         });
         add(enterButton);
         drawRegisterButton();
@@ -69,8 +66,7 @@ class LogInScreen extends BaseScreen {
     }
 
     private void drawGreetingString(Graphics2D g2) {
-        Font font = new Font("TimesRoman", Font.PLAIN, 20);
-        g2.setFont(font);
+        g2.setFont(font20);
         FontMetrics fm = g2.getFontMetrics();
         String greeting = "Добро пожаловать в систему тестирования!";
         int posX = (width - fm.stringWidth(greeting)) / 2;
@@ -78,11 +74,18 @@ class LogInScreen extends BaseScreen {
         g2.drawString(greeting, posX, posY);
     }
 
+    private void drawDescription(Graphics2D g2, String description, int y) {
+        g2.setFont(font14);
+        FontMetrics fm = g2.getFontMetrics();
+        int x = (width - componentSize.width) / 2 - fm.stringWidth(description) - 10;
+        g2.drawString(description, x, y);
+    }
+
     private void drawRegisterButton() {
         JButton registerButton = createButton((width - 2 * componentSize.width - 40) / 2, (int) (height * 0.7), "Зарегистрироваться");
         registerButton.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            parentFrame.add(new RegisterScreen(parentFrame));
+            parentFrame.add(new RegisterScreen(parentFrame, false));
             parentFrame.setVisible(true);
         });
         add(registerButton);

@@ -29,12 +29,14 @@ public class ResultsTableScreen extends BaseScreen {
         this.margin = 10;
         this.currentHeight = 30 + exitButtonSize.height;
         this.currentCellHeight = 30;
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        drawUsername(g2);
         drawBackButton();
         drawTableHeader(g2);
         for (Result result : results) {
@@ -42,6 +44,15 @@ public class ResultsTableScreen extends BaseScreen {
         }
         currentHeight = 30 + exitButtonSize.height;
         currentCellHeight = 30;
+    }
+
+    private void drawUsername(Graphics2D g2) {
+        g2.setFont(font14);
+        if (user == null) {
+            g2.drawString("Гостевой режим", usernameX, usernameY);
+        } else {
+            g2.drawString(user.getName(), usernameX, usernameY);
+        }
     }
 
     private void drawBackButton() {
@@ -71,10 +82,10 @@ public class ResultsTableScreen extends BaseScreen {
         g2.setStroke(new BasicStroke(stroke));
         g2.drawLine(0, currentHeight, width, currentHeight);
         String name = "Имя пользователя";
-        g2.setFont(font);
+        g2.setFont(font14);
         FontMetrics fm = g2.getFontMetrics();
         int x = (firstCellWidth - fm.stringWidth(name)) / 2;
-        int y = currentHeight + currentCellHeight - (currentCellHeight - font.getSize()) / 2;
+        int y = currentHeight + currentCellHeight - (currentCellHeight - font14.getSize()) / 2;
         g2.drawString(name, x, y);
         name = "Баллы";
         x = firstCellWidth + (secondCellWidth - fm.stringWidth(name)) / 2;
@@ -87,8 +98,8 @@ public class ResultsTableScreen extends BaseScreen {
 
     private void drawResult(Graphics2D g2, Result result) {
         drawUsername(g2, result);
-        drawScore(g2, result);
         drawDate(g2, result);
+        drawScore(g2, result);
         drawTableCarcass(g2);
     }
 
@@ -108,16 +119,9 @@ public class ResultsTableScreen extends BaseScreen {
 
     private void drawScore(Graphics2D g2, Result result) {
         FontMetrics fm = g2.getFontMetrics();
-        int linesNumber = (fm.stringWidth(String.valueOf(result.getScore())) / (secondCellWidth - 2 * margin)) + 1;
-        JTextArea textArea = createTextArea(
-                String.valueOf(result.getScore()),
-                secondCellWidth - 2 * margin,
-                linesNumber * fm.getHeight(),
-                firstCellWidth + margin,
-                currentHeight
-        );
-        add(textArea);
-        currentCellHeight = Math.max(textArea.getHeight(), currentCellHeight);
+        int x = firstCellWidth + (secondCellWidth - fm.stringWidth(String.valueOf(result.getScore()))) / 2;
+        int y = currentHeight + currentCellHeight - ((currentCellHeight - fm.getFont().getSize()) / 2 + 1);
+        g2.drawString(String.valueOf(result.getScore()), x, y);
     }
 
     private void drawDate(Graphics2D g2, Result result) {

@@ -1,5 +1,7 @@
 package ui;
 
+import core.DatabaseManager;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -16,7 +18,13 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        JComponent component = new LogInScreen(this);
+        JComponent component;
+        DatabaseManager dbm = new DatabaseManager();
+        if (dbm.getUsersSize() == 0) {
+            component = new RegisterScreen(this, true);
+        } else {
+            component = new LogInScreen(this);
+        }
         component.setAlignmentX(Component.CENTER_ALIGNMENT);
         component.setAlignmentY(Component.CENTER_ALIGNMENT);
         getContentPane().setBackground(BACKGROUND_COLOR);

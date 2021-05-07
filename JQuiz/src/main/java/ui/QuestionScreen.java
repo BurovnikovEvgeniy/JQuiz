@@ -7,8 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class QuestionScreen extends BaseScreen {
+    private static final Color VARIANT_COLOR = new Color(214, 201, 201);
     private final User user;
-    private final Color variantColor;
     private final Dimension variantSize;
     private final int serialNumber;
     private final int questionsCount;
@@ -19,19 +19,20 @@ public class QuestionScreen extends BaseScreen {
     QuestionScreen(JFrame parent, User user, int number, int count, Question question) {
         super(parent);
         this.user = user;
-        this.variantColor = new Color(214, 201, 201);
         this.variantSize = new Dimension((int) (width * 0.35), (int) (height * 0.13));
         this.serialNumber = number;
         this.questionsCount = count;
         this.question = question;
         this.variants = new JButton[4];
         this.chosenIndex = -1;
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        drawUsername(g2);
         drawSerialNumber(g2);
         drawQuestion();
         drawVariants();
@@ -39,9 +40,17 @@ public class QuestionScreen extends BaseScreen {
         drawNextButton();
     }
 
+    private void drawUsername(Graphics2D g2) {
+        g2.setFont(font14);
+        if (user == null) {
+            g2.drawString("Гостевой режим", usernameX, usernameY);
+        } else {
+            g2.drawString(user.getName(), usernameX, usernameY);
+        }
+    }
+
     private void drawSerialNumber(Graphics2D g2) {
-        Font font = new Font("TimesRoman", Font.PLAIN, 14);
-        g2.setFont(font);
+        g2.setFont(font14);
         FontMetrics fm = g2.getFontMetrics();
         String serialNumber = this.serialNumber + "/" + questionsCount;
         int posX = (width - fm.stringWidth(serialNumber)) / 2;
@@ -53,8 +62,7 @@ public class QuestionScreen extends BaseScreen {
         JTextArea textArea = new JTextArea(question.getQuestion());
         textArea.setSize(2 * variantSize.width, 80);
         textArea.setBackground(parentFrame.getContentPane().getBackground());
-        Font font = new Font("TimesRoman", Font.PLAIN, 16);
-        textArea.setFont(font);
+        textArea.setFont(font16);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setLocation((width - textArea.getSize().width) / 2, 50);
@@ -65,13 +73,12 @@ public class QuestionScreen extends BaseScreen {
     private void drawVariants() {
         for (int i = 0; i < 4; i++) {
             variants[i] = new JButton(question.getAnswers()[i]);
-            variants[i].setBackground(variantColor);
+            variants[i].setBackground(VARIANT_COLOR);
             variants[i].setSize(variantSize);
             int posX = (width - 2 * variantSize.width - 20) / 2 + (variantSize.width + 20) * (i % 2);
             int posY = height / 2 - variantSize.height + (variantSize.height + 20) * (i / 2);
             variants[i].setLocation(posX, posY);
-            Font font = new Font("TimesRoman", Font.PLAIN, 14);
-            variants[i].setFont(font);
+            variants[i].setFont(font14);
             int finalI = i;
             variants[i].addActionListener(actionEvent -> {
                 if (chosenIndex != -1) {

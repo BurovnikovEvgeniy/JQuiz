@@ -27,12 +27,14 @@ public class DeleteResultScreen extends BaseScreen {
         this.margin = 10;
         this.currentHeight = componentSize.height + 30;
         this.currentCellHeight = 30;
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        drawUsername(g2);
         drawBackButton();
         drawTableHeader(g2);
         for (Result result : results) {
@@ -50,6 +52,11 @@ public class DeleteResultScreen extends BaseScreen {
         currentCellHeight = 30;
     }
 
+    private void drawUsername(Graphics2D g2) {
+        g2.setFont(font14);
+        g2.drawString("Администратор", usernameX, usernameY);
+    }
+
     private void drawBackButton() {
         JButton backButton = createBackButton();
         backButton.addActionListener(actionEvent -> {
@@ -64,16 +71,16 @@ public class DeleteResultScreen extends BaseScreen {
         g2.setStroke(new BasicStroke(stroke));
         g2.drawLine(0, currentHeight, firstCellWidth + secondCellWidth + thirdCellWidth, currentHeight);
         String name = "Имя пользователя";
-        g2.setFont(font);
+        g2.setFont(font14);
         FontMetrics fm = g2.getFontMetrics();
         int x = (firstCellWidth - fm.stringWidth(name)) / 2;
-        int y = currentHeight + 30 - (30 - font.getSize()) / 2;
-        g2.drawString(name, x, y);
-        name = "Баллы";
-        x = firstCellWidth + (secondCellWidth - fm.stringWidth(name)) / 2;
+        int y = currentHeight + 30 - (30 - font14.getSize()) / 2;
         g2.drawString(name, x, y);
         name = "Дата";
         x = firstCellWidth + secondCellWidth + (thirdCellWidth - fm.stringWidth(name)) / 2;
+        g2.drawString(name, x, y);
+        name = "Баллы";
+        x = firstCellWidth + (secondCellWidth - fm.stringWidth(name)) / 2;
         g2.drawString(name, x, y);
         drawTableCarcass(g2);
     }

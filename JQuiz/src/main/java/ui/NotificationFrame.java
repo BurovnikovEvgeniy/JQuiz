@@ -15,11 +15,13 @@ public class NotificationFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
         setResizable(false);
-        JLabel text = new JLabel(message);
-        text.setSize(250, 100);
-        text.setHorizontalAlignment(JLabel.CENTER);
-        text.setVerticalAlignment(JLabel.CENTER);
+        JTextArea text = new JTextArea(message);
+        text.setSize(width - 40, height - 40);
+        text.setLineWrap(true);
+        text.setWrapStyleWord(true);
+        text.setEditable(false);
         text.setFont(new Font("TimesRoman", Font.PLAIN, 16));
+        text.setLocation(20, 20);
         add(text);
         setVisible(true);
     }

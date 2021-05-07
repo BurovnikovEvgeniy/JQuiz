@@ -1,9 +1,7 @@
 package ui;
 
-import core.LogInManager;
 import core.QuestionManager;
 import model.Question;
-import model.User;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,22 +12,26 @@ public class AddQuestionScreen extends BaseScreen {
     private final Dimension textAreaSize;
     private final String[] descriptions;
     private final JTextField[] fields;
+    private final QuestionManager questionManager;
     private int currentHeight;
 
-    AddQuestionScreen(JFrame parent) {
+    AddQuestionScreen(JFrame parent, QuestionManager questionManager) {
         super(parent);
         this.margin = 10;
         this.descriptionWidth = (int) (width * 0.2);
         this.textAreaSize = new Dimension(width - descriptionWidth - 4 * this.margin, (int) (height * 0.1));
         this.descriptions = new String[]{"Вопрос", "Вариант 1", "Вариант 2", "Вариант 3", "Вариант 4", "Верный индекс"};
         this.fields = new JTextField[descriptions.length];
+        this.questionManager = questionManager;
         this.currentHeight = 20 + exitButtonSize.height + this.margin;
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        drawUsername(g2);
         drawBackButton();
         for (int i = 0; i < descriptions.length; i++) {
             fields[i] = createTextField(
@@ -48,6 +50,11 @@ public class AddQuestionScreen extends BaseScreen {
         currentHeight = 20 + exitButtonSize.height + margin;
     }
 
+    private void drawUsername(Graphics2D g2) {
+        g2.setFont(font14);
+        g2.drawString("Администратор", usernameX, usernameY);
+    }
+
     private void drawBackButton() {
         JButton backButton = createBackButton();
         backButton.addActionListener(actionEvent -> {
@@ -59,7 +66,7 @@ public class AddQuestionScreen extends BaseScreen {
     }
 
     private void drawDescription(Graphics2D g2, String description) {
-        g2.setFont(font);
+        g2.setFont(font14);
         g2.drawString(description, margin, currentHeight + textAreaSize.height / 2);
     }
 
@@ -74,11 +81,8 @@ public class AddQuestionScreen extends BaseScreen {
             }
             String[] variants = new String[]{fields[1].getText(), fields[2].getText(), fields[3].getText(), fields[4].getText()};
             Question question = new Question(fields[0].getText(), variants, Integer.parseInt(fields[5].getText()));
-
-            /*new QuestionManager().addQuestion(question);*/
-
             try {
-                new QuestionManager().addQuestion(question);
+                questionManager.addQuestion(question);
             } catch (RuntimeException e) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
             }
