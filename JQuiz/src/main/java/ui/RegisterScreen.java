@@ -27,6 +27,9 @@ public class RegisterScreen extends BaseScreen {
         if (isAdmin) {
             drawGreetingString(g2);
         }
+        else {
+            drawBackButton();
+        }
         String description = "Логин:";
         drawDescription(
                 g2,
@@ -88,5 +91,15 @@ public class RegisterScreen extends BaseScreen {
         int posX = (width - fm.stringWidth(greeting)) / 2;
         int posY = (int) (height * 0.14);
         g2.drawString(greeting, posX, posY);
+    }
+
+    private void drawBackButton() {
+        JButton backButton = createBackButton();
+        backButton.addActionListener(actionEvent -> {
+            parentFrame.getContentPane().remove(0);
+            parentFrame.add(new LogInScreen(parentFrame));
+            parentFrame.setVisible(true);
+        });
+        add(backButton);
     }
 }

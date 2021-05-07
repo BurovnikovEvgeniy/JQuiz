@@ -20,7 +20,7 @@ public class AddQuestionScreen extends BaseScreen {
         super(parent);
         this.margin = 10;
         this.descriptionWidth = (int) (width * 0.2);
-        this.textAreaSize = new Dimension(width - descriptionWidth - 4 * this.margin, (int) (height * 0.1));
+        this.textAreaSize = new Dimension(width - descriptionWidth - 4 * this.margin, (int) (height * 0.05));
         this.descriptions = new String[]{"Вопрос", "Вариант 1", "Вариант 2", "Вариант 3", "Вариант 4", "Верный индекс"};
         this.fields = new JTextField[descriptions.length];
         this.questionManager = questionManager;
@@ -75,7 +75,7 @@ public class AddQuestionScreen extends BaseScreen {
         JButton submitButton = createButton(width - componentSize.width - 20, currentHeight, "Добавить");
         submitButton.addActionListener(actionEvent -> {
             for (JTextField field : fields) {
-                if (field.getText().length() == 0) {
+                if (field.getText().isEmpty()) {
                     SwingUtilities.invokeLater(() -> new NotificationFrame("Вы заполнили не все поля!").setVisible(true));
                     return;
                 }
