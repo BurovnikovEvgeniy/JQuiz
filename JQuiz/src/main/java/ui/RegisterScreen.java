@@ -68,7 +68,6 @@ public class RegisterScreen extends BaseScreen {
                     logInManager.register(loginField.getText(), new String(passwordField.getPassword()));
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                 }
-                parentFrame.repaint();
                 parentFrame.setVisible(true);
             } catch (UserException e) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));

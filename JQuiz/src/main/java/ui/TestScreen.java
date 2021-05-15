@@ -33,7 +33,9 @@ public class TestScreen extends BaseScreen {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        drawSettingsBox();
+        if (user != null) {
+            drawSettingsBox();
+        }
         drawUsername(g2);
         drawExitButton();
         drawGreetingString(g2);
@@ -118,7 +120,13 @@ public class TestScreen extends BaseScreen {
             currentQuestion++;
         } else {
             answers[currentQuestion - 1] = answer;
-            Result result = new Result(user.getName(), new Date(), answers);
+            Result result;
+            if (user != null) {
+                result = new Result(user.getName(), new Date(), answers);
+            }
+            else {
+                result = new Result(null, new Date(), answers);
+            }
             parentFrame.getContentPane().remove(1);
             parentFrame.getContentPane().remove(0);
             parentFrame.add(new ResultScreen(parentFrame, user, result, questionsCount));

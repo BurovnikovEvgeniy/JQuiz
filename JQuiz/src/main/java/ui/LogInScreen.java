@@ -52,10 +52,9 @@ class LogInScreen extends BaseScreen {
                 parentFrame.setVisible(true);
             } else {
                 try {
-                    new LogInManager().logIn(loginField.getText(), new String(passwordField.getPassword()));
+                    logInManager.logIn(loginField.getText(), new String(passwordField.getPassword()));
                     parentFrame.getContentPane().remove(0);
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
-                    parentFrame.repaint();
                     parentFrame.setVisible(true);
                 } catch (NullFieldsException e) {
                     System.out.println(e.getMessage());

@@ -45,7 +45,7 @@ public class ChangePasswordScreen extends BaseScreen {
                 try {
                     logInManager.changePassword(user.getName(), new String(newPassword.getPassword()));
                     parentFrame.getContentPane().remove(0);
-                    if (logInManager.isAdmin(user.getName(), user.getPassword())) {
+                    if (user.getName().equals("admin")) {
                         parentFrame.add(new AdminScreen(parentFrame));
                     } else {
                         parentFrame.add(new TestScreen(parentFrame, user));
