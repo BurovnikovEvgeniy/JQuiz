@@ -121,11 +121,10 @@ public class TestScreen extends BaseScreen {
         } else {
             answers[currentQuestion - 1] = answer;
             Result result;
-            if (user != null) {
+            if (user == null) {
+                result = new Result("guest", new Date(), answers);
+            } else {
                 result = new Result(user.getName(), new Date(), answers);
-            }
-            else {
-                result = new Result(null, new Date(), answers);
             }
             parentFrame.getContentPane().remove(1);
             parentFrame.getContentPane().remove(0);

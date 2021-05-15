@@ -1,4 +1,6 @@
 import core.DatabaseManager;
+import core.exceptions.QuestionAlreadyExistsException;
+import core.exceptions.UserAlreadyExistsException;
 import model.Question;
 import model.Result;
 import model.User;
@@ -19,7 +21,7 @@ public class MapDatabaseIT {
     }
 
     @Test
-    public void test() {
+    public void test() throws QuestionAlreadyExistsException, UserAlreadyExistsException {
         addOneUser();
         addManyUsers();
         addOneQuestion();
@@ -44,53 +46,37 @@ public class MapDatabaseIT {
     }
 
     @Test
-    public void addOneUser() {
+    public void addOneUser() throws UserAlreadyExistsException {
         long size = databaseManager.getUsersSize();
-        try {
-            databaseManager.addUser(new User("vanya", "qwerty"));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
+        databaseManager.addUser(new User("vanya", "qwerty"));
         Assert.assertEquals(size + 1, databaseManager.getUsersSize());
     }
 
     @Test
-    public void addManyUsers() {
+    public void addManyUsers() throws UserAlreadyExistsException {
         long size = databaseManager.getUsersSize();
 
-        try {
-            databaseManager.addUser(new User("petya", "1234"));
-            databaseManager.addUser(new User("masha", "hrGS9SbWze"));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
+        databaseManager.addUser(new User("petya", "1234"));
+        databaseManager.addUser(new User("masha", "hrGS9SbWze"));
 
         Assert.assertEquals(size + 2, databaseManager.getUsersSize());
     }
 
     @Test
-    public void addOneQuestion() {
+    public void addOneQuestion() throws QuestionAlreadyExistsException {
         long size = databaseManager.getQuestionsSize();
-        try {
-            databaseManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
+        databaseManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
         Assert.assertEquals(size + 1, databaseManager.getQuestionsSize());
     }
 
     @Test
-    public void addManyQuestions() {
+    public void addManyQuestions() throws QuestionAlreadyExistsException {
         long size = databaseManager.getQuestionsSize();
 
-        try {
-            databaseManager.addQuestion(new Question("Question1?", new String[]{"one", "two", "three", "four"}, 2));
-            databaseManager.addQuestion(new Question("Question2?", new String[]{"one", "two", "three", "four"}, 1));
-            databaseManager.addQuestion(new Question("Question3?", new String[]{"one", "two", "three", "four"}, 4));
-            databaseManager.addQuestion(new Question("Question4?", new String[]{"one", "two", "three", "four"}, 1));
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
+        databaseManager.addQuestion(new Question("Question1?", new String[]{"one", "two", "three", "four"}, 2));
+        databaseManager.addQuestion(new Question("Question2?", new String[]{"one", "two", "three", "four"}, 1));
+        databaseManager.addQuestion(new Question("Question3?", new String[]{"one", "two", "three", "four"}, 4));
+        databaseManager.addQuestion(new Question("Question4?", new String[]{"one", "two", "three", "four"}, 1));
 
         Assert.assertEquals(size + 4, databaseManager.getQuestionsSize());
     }

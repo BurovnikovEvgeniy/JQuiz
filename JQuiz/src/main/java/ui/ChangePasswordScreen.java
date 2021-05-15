@@ -1,6 +1,8 @@
 package ui;
 
 import core.LogInManager;
+import core.exceptions.EmptyPasswordException;
+import core.exceptions.EmptyUsernameException;
 import core.exceptions.WrongPasswordException;
 import model.User;
 
@@ -51,7 +53,7 @@ public class ChangePasswordScreen extends BaseScreen {
                         parentFrame.add(new TestScreen(parentFrame, user));
                     }
                     parentFrame.setVisible(true);
-                } catch (WrongPasswordException e) {
+                } catch (EmptyPasswordException | EmptyUsernameException e) {
                     SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
                 }
             } else {

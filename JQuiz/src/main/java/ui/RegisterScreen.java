@@ -1,7 +1,9 @@
 package ui;
 
 import core.LogInManager;
-import core.exceptions.UserException;
+import core.exceptions.EmptyPasswordException;
+import core.exceptions.EmptyUsernameException;
+import core.exceptions.UserAlreadyExistsException;
 import model.User;
 
 import javax.swing.*;
@@ -26,8 +28,7 @@ public class RegisterScreen extends BaseScreen {
         Graphics2D g2 = (Graphics2D) g;
         if (isAdmin) {
             drawGreetingString(g2);
-        }
-        else {
+        } else {
             drawBackButton();
         }
         String description = "Логин:";
@@ -69,7 +70,7 @@ public class RegisterScreen extends BaseScreen {
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                 }
                 parentFrame.setVisible(true);
-            } catch (UserException e) {
+            } catch (UserAlreadyExistsException | EmptyPasswordException | EmptyUsernameException e) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
             }
         });

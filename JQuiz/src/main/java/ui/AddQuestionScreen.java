@@ -1,7 +1,7 @@
 package ui;
 
 import core.QuestionManager;
-import core.exceptions.QuestionException;
+import core.exceptions.QuestionAlreadyExistsException;
 import model.Question;
 
 import javax.swing.*;
@@ -84,7 +84,7 @@ public class AddQuestionScreen extends BaseScreen {
             Question question = new Question(fields[0].getText(), variants, Integer.parseInt(fields[5].getText()));
             try {
                 questionManager.addQuestion(question);
-            } catch (QuestionException e) {
+            } catch (QuestionAlreadyExistsException e) {
                 SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
             }
         });
