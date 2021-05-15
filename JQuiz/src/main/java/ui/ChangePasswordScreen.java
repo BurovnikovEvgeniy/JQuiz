@@ -3,7 +3,6 @@ package ui;
 import core.LogInManager;
 import core.exceptions.EmptyPasswordException;
 import core.exceptions.EmptyUsernameException;
-import core.exceptions.WrongPasswordException;
 import model.User;
 
 import javax.swing.*;

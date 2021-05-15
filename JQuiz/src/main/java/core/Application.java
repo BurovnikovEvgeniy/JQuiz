@@ -4,7 +4,6 @@ import core.exceptions.QuestionAlreadyExistsException;
 import model.Question;
 import ui.MainFrame;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -33,6 +32,7 @@ public class Application {
             }
         }
     }
+
     private void addQuestionsForDebugOnly(DatabaseManager databaseManager) throws IOException {
 
         Files.createFile(Paths.get(databaseManager.getPathToDbs() + "/new"));

@@ -36,6 +36,7 @@ public class ResultDao extends BaseDao {
     public String getDbName() {
         return dbName;
     }
+
     public void addResult(Result newResult) {
         open();
         results.add(newResult);
