@@ -26,11 +26,16 @@ public class ResultDao extends BaseDao {
 
     private List<Result> results;
     private DB resultsDB;
+    private final String dbName = "/results.db";
+
 
     public ResultDao(String pathToDbs) {
         super(pathToDbs);
     }
 
+    public String getDbName() {
+        return dbName;
+    }
     public void addResult(Result newResult) {
         open();
         results.add(newResult);
@@ -96,7 +101,7 @@ public class ResultDao extends BaseDao {
     }
 
     private void open() {
-        resultsDB = DBMaker.fileDB(new File(pathToDbs + "/results.db"))
+        resultsDB = DBMaker.fileDB(new File(pathToDbs + dbName))
                 .fileLockDisable()
                 .fileMmapEnable()
                 .closeOnJvmShutdown()

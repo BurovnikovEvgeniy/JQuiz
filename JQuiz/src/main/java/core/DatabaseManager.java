@@ -30,9 +30,19 @@ public class DatabaseManager {
         Files.createDirectories(Paths.get(pathToDbs));
     }
 
+    public void deleteDbDirectory() throws IOException {
+        if (Files.exists(Paths.get(pathToDbs))) {
+            Files.delete(Paths.get(pathToDbs + userDao.getDbName()));
+            Files.delete(Paths.get(pathToDbs + resultDao.getDbName()));
+            Files.delete(Paths.get(pathToDbs + questionDao.getDbName()));
+            Files.delete(Paths.get(pathToDbs));
+        }
+    }
+
     public String getPathToDbs() {
         return pathToDbs;
     }
+
     public void addUser(User newUser) throws UserAlreadyExistsException {
         if (userDao.contains(newUser)) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует!");
