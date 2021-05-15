@@ -1,6 +1,6 @@
 package core.exceptions;
 
-public class NoSuchUserException extends UserException {
+public class NoSuchUserException extends Exception {
     public NoSuchUserException(String message) {
         super(message);
     }

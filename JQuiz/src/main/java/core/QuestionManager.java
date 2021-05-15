@@ -1,5 +1,6 @@
 package core;
 
+import core.exceptions.QuestionAlreadyExistsException;
 import model.Question;
 
 public class QuestionManager {
@@ -18,7 +19,7 @@ public class QuestionManager {
         databaseManager.deleteQuestion(question.getQuestion());
     }
 
-    public void addQuestion(Question question) {
+    public void addQuestion(Question question) throws QuestionAlreadyExistsException {
         databaseManager.addQuestion(question);
     }
 }

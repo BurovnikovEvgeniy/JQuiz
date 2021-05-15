@@ -118,7 +118,12 @@ public class TestScreen extends BaseScreen {
             currentQuestion++;
         } else {
             answers[currentQuestion - 1] = answer;
-            Result result = new Result(user.getName(), new Date(), answers);
+            Result result;
+            if (user == null) {
+                result = new Result("guest", new Date(), answers);
+            } else {
+                result = new Result(user.getName(), new Date(), answers);
+            }
             parentFrame.getContentPane().remove(1);
             parentFrame.getContentPane().remove(0);
             parentFrame.add(new ResultScreen(parentFrame, user, result, questionsCount));

@@ -1,6 +1,6 @@
 package core;
 
-import core.exceptions.QuestionAlreadyExists;
+import core.exceptions.QuestionAlreadyExistsException;
 import core.exceptions.UserAlreadyExistsException;
 import db.QuestionDao;
 import db.ResultDao;
@@ -30,7 +30,10 @@ public class DatabaseManager {
         Files.createDirectories(Paths.get(pathToDbs));
     }
 
-    public void addUser(User newUser) throws RuntimeException {
+    public String getPathToDbs() {
+        return pathToDbs;
+    }
+    public void addUser(User newUser) throws UserAlreadyExistsException {
         if (userDao.contains(newUser)) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует!");
         }
@@ -54,9 +57,9 @@ public class DatabaseManager {
     }
 
 
-    public void addQuestion(Question newQuestion) throws RuntimeException {
+    public void addQuestion(Question newQuestion) throws QuestionAlreadyExistsException {
         if (questionDao.contains(newQuestion)) {
-            throw new QuestionAlreadyExists("Такой вопрос уже существует!");
+            throw new QuestionAlreadyExistsException("Такой вопрос уже существует!");
         }
         questionDao.addQuestion(newQuestion);
     }
