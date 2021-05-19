@@ -14,23 +14,28 @@ public class Application {
         DatabaseManager databaseManager = new DatabaseManager();
 
         try {
-
-            if (Files.exists(Paths.get(databaseManager.getPathToDbs() + "/new"))) {
-                Files.deleteIfExists(Paths.get(databaseManager.getPathToDbs()));
-            }
-
+            updateDb(databaseManager);
             databaseManager.createDbDirectory();
+            addQuestionsForDebugOnly(databaseManager);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
-
-        addQuestionsForDebugOnly(databaseManager);
 
         MainFrame frame = new MainFrame();
         frame.setVisible(true);
     }
 
-    private void addQuestionsForDebugOnly(DatabaseManager databaseManager) {
+    private void updateDb(DatabaseManager databaseManager) throws IOException {
+        if (Files.exists(Paths.get(databaseManager.getPathToDbs()))) {
+            if (!Files.exists(Paths.get(databaseManager.getPathToDbs() + "/new"))) {
+                databaseManager.deleteDbDirectory();
+            }
+        }
+    }
+
+    private void addQuestionsForDebugOnly(DatabaseManager databaseManager) throws IOException {
+
+        Files.createFile(Paths.get(databaseManager.getPathToDbs() + "/new"));
 
         if (databaseManager.getQuestionsSize() == 0) {
             String[] answers = new String[]{"1", "2", "3", "4"};
@@ -39,8 +44,8 @@ public class Application {
                 databaseManager.addQuestion(new Question("2?", answers, 0));
                 databaseManager.addQuestion(new Question("3?", answers, 0));
                 databaseManager.addQuestion(new Question("4?", answers, 0));
-               /* databaseManager.addQuestion(new Question("5?", answers, 0));
-                databaseManager.addQuestion(new Question("6?", answers, 0));
+                databaseManager.addQuestion(new Question("5?", answers, 0));
+                /*databaseManager.addQuestion(new Question("6?", answers, 0));
                 databaseManager.addQuestion(new Question("7?", answers, 0));
                 databaseManager.addQuestion(new Question("8?", answers, 0));
                 databaseManager.addQuestion(new Question("9?", answers, 0));

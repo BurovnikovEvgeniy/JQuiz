@@ -25,9 +25,15 @@ public class UserDao extends BaseDao {
 
     private DB usersDB;
     private List<User> users;
+    private final String dbName = "/users.db";
+
 
     public UserDao(String pathToDbs) {
         super(pathToDbs);
+    }
+
+    public String getDbName() {
+        return dbName;
     }
 
     public void addUser(User newUser) {
@@ -92,7 +98,7 @@ public class UserDao extends BaseDao {
     }
 
     private void open() {
-        usersDB = DBMaker.fileDB(new File(pathToDbs + "/users.db"))
+        usersDB = DBMaker.fileDB(new File(pathToDbs + dbName))
                 .fileLockDisable()
                 .fileMmapEnable()
                 .checksumHeaderBypass()

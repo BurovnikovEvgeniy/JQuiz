@@ -33,9 +33,14 @@ public class QuestionDao extends BaseDao {
 
     private List<Question> questions;
     private DB questionsDB;
+    private final String dbName = "/questions.db";
 
     public QuestionDao(String pathToDbs) {
         super(pathToDbs);
+    }
+
+    public String getDbName() {
+        return dbName;
     }
 
     public void addQuestion(Question newQuestion) {
@@ -107,7 +112,7 @@ public class QuestionDao extends BaseDao {
     }
 
     private void open() {
-        questionsDB = DBMaker.fileDB(new File(pathToDbs + "/questions.db"))
+        questionsDB = DBMaker.fileDB(new File(pathToDbs + dbName))
                 .fileLockDisable()
                 .fileMmapEnable()
                 .closeOnJvmShutdown()

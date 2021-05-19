@@ -42,11 +42,10 @@ public class Question implements Serializable {
         return result;
     }
 
-
- /*   public boolean equals(Question q) {
+    public boolean equals(Question q) {
         if (this == q) return true;
         if (q == null) return false;
         return correctAnswer == q.correctAnswer && q.getQuestion().equals(q.question) && Arrays.equals(answers, q.answers);
-    }*/
+    }
 
 }
