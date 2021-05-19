@@ -74,7 +74,11 @@ public class ChangePasswordScreen extends BaseScreen {
         JButton backButton = createBackButton();
         backButton.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            parentFrame.add(new TestScreen(parentFrame, user));
+            if (user.getName().equals("admin")) {
+                parentFrame.add(new AdminScreen(parentFrame));
+            } else {
+                parentFrame.add(new TestScreen(parentFrame, user));
+            }
             parentFrame.setVisible(true);
         });
         add(backButton);

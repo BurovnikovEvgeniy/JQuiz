@@ -74,9 +74,10 @@ public class AddQuestionScreen extends BaseScreen {
     private void drawSubmitButton() {
         JButton submitButton = createButton(width - componentSize.width - 20, currentHeight, "Добавить");
         submitButton.addActionListener(actionEvent -> {
-            for (JTextField field : fields) {
-                if (field.getText().isEmpty()) {
-                    SwingUtilities.invokeLater(() -> new NotificationFrame("Вы заполнили не все поля!").setVisible(true));
+            for (int i = 0; i < descriptions.length; i++) {
+                if (fields[i].getText().isEmpty()) {
+                    int finalI = i;
+                    SwingUtilities.invokeLater(() -> new NotificationFrame("Вы не заполнили поле \"" + descriptions[finalI] + "\"!").setVisible(true));
                     return;
                 }
             }

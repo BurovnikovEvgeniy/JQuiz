@@ -61,12 +61,13 @@ public class RegisterScreen extends BaseScreen {
         JButton button = createButton(componentX, (int) (height * 0.56), "Зарегистрироваться");
         button.addActionListener(actionEvent -> {
             try {
-                parentFrame.getContentPane().remove(0);
                 if (isAdmin) {
                     logInManager.registerAdmin(loginField.getText(), new String(passwordField.getPassword()));
+                    parentFrame.getContentPane().remove(0);
                     parentFrame.add(new LogInScreen(parentFrame));
                 } else {
                     logInManager.register(loginField.getText(), new String(passwordField.getPassword()));
+                    parentFrame.getContentPane().remove(0);
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                 }
                 parentFrame.setVisible(true);
