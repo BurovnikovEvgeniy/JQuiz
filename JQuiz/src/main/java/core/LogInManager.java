@@ -19,7 +19,7 @@ public class LogInManager {
             throw new NullFieldsException("Имя пользователя или пароль принимают значение null");
         }
 
-        checkEmptyFields(username, password);
+        checkCredentials(username, password);
 
         User user = databaseManager.findUser(username);
 
@@ -33,7 +33,7 @@ public class LogInManager {
     }
 
     public void register(String username, String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException {
-        checkEmptyFields(username, password);
+        checkCredentials(username, password);
         databaseManager.addUser(new User(username, password));
     }
 
@@ -42,13 +42,15 @@ public class LogInManager {
     }
 
     public boolean isAdmin(String username, String password) {
-        if (!username.equals("admin")) return false;
+        if (!username.equals("admin")) {
+            return false;
+        }
         User admin = databaseManager.findUser(username);
         return password.equals(admin.getPassword());
     }
 
     public void changePassword(String username, String password) throws EmptyUsernameException, EmptyPasswordException {
-        checkEmptyFields(username, password);
+        checkCredentials(username, password);
         databaseManager.updateUser(username, new User(username, password));
     }
 
@@ -56,7 +58,7 @@ public class LogInManager {
         return databaseManager.findUser("admin");
     }
 
-    private void checkEmptyFields(String username, String password) throws EmptyUsernameException, EmptyPasswordException {
+    private void checkCredentials(String username, String password) throws EmptyUsernameException, EmptyPasswordException {
         if (username.isEmpty()) {
             throw new EmptyUsernameException("Введите имя пользователя!");
         }

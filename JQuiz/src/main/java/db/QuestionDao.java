@@ -11,29 +11,9 @@ import java.util.List;
 
 public class QuestionDao extends BaseDao {
 
-    private static class QuestionSerializer implements Serializer<Question>, Serializable {
-        @Override
-        public void serialize(DataOutput2 out, Question question) throws IOException {
-            out.writeUTF(question.getQuestion());
-            SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
-            stringSerializerArray.serialize(out, question.getAnswers());
-            out.writeInt(question.getCorrectAnswer());
-        }
-
-        @Override
-        public Question deserialize(DataInput2 in, int i) throws IOException {
-            String question = in.readUTF();
-            SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
-            String[] variants = stringSerializerArray.deserialize(in, i);
-            int index = in.readInt();
-
-            return new Question(question, variants, index);
-        }
-    }
-
     private List<Question> questions;
     private DB questionsDB;
-    private final String dbName = "/questions.db";
+    private final static String dbName = "/questions.db";
 
     public QuestionDao(String pathToDbs) {
         super(pathToDbs);
@@ -124,4 +104,23 @@ public class QuestionDao extends BaseDao {
         questionsDB.close();
     }
 
+    private static class QuestionSerializer implements Serializer<Question>, Serializable {
+        @Override
+        public void serialize(DataOutput2 out, Question question) throws IOException {
+            out.writeUTF(question.getQuestion());
+            SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
+            stringSerializerArray.serialize(out, question.getAnswers());
+            out.writeInt(question.getCorrectAnswer());
+        }
+
+        @Override
+        public Question deserialize(DataInput2 in, int i) throws IOException {
+            String question = in.readUTF();
+            SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
+            String[] variants = stringSerializerArray.deserialize(in, i);
+            int index = in.readInt();
+
+            return new Question(question, variants, index);
+        }
+    }
 }

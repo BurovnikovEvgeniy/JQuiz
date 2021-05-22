@@ -28,14 +28,6 @@ public class Question implements Serializable {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question1 = (Question) o;
-        return correctAnswer == question1.correctAnswer && Objects.equals(question, question1.question) && Arrays.equals(answers, question1.answers);
-    }
-
-    @Override
     public int hashCode() {
         int result = Objects.hash(question, correctAnswer);
         result = 31 * result + Arrays.hashCode(answers);

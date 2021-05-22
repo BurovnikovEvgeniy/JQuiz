@@ -14,7 +14,7 @@ public class Application {
         DatabaseManager databaseManager = new DatabaseManager();
 
         try {
-            updateDb(databaseManager);
+            //updateDb(databaseManager);
             databaseManager.createDbDirectory();
             addQuestionsForDebugOnly(databaseManager);
         } catch (IOException e) {
@@ -38,28 +38,12 @@ public class Application {
         Files.createFile(Paths.get(databaseManager.getPathToDbs() + "/new"));
 
         if (databaseManager.getQuestionsSize() == 0) {
-            String[] answers = new String[]{"1", "2", "3", "4"};
             try {
-                databaseManager.addQuestion(new Question("1?", answers, 0));
-                databaseManager.addQuestion(new Question("2?", answers, 0));
-                databaseManager.addQuestion(new Question("3?", answers, 0));
-                databaseManager.addQuestion(new Question("4?", answers, 0));
-                databaseManager.addQuestion(new Question("5?", answers, 0));
-                /*databaseManager.addQuestion(new Question("6?", answers, 0));
-                databaseManager.addQuestion(new Question("7?", answers, 0));
-                databaseManager.addQuestion(new Question("8?", answers, 0));
-                databaseManager.addQuestion(new Question("9?", answers, 0));
-                databaseManager.addQuestion(new Question("10?", answers, 0));
-                databaseManager.addQuestion(new Question("11?", answers, 0));
-                databaseManager.addQuestion(new Question("12?", answers, 0));
-                databaseManager.addQuestion(new Question("13?", answers, 0));
-                databaseManager.addQuestion(new Question("14?", answers, 0));
-                databaseManager.addQuestion(new Question("15?", answers, 0));
-                databaseManager.addQuestion(new Question("16?", answers, 0));
-                databaseManager.addQuestion(new Question("17?", answers, 0));
-                databaseManager.addQuestion(new Question("18?", answers, 0));
-                databaseManager.addQuestion(new Question("19?", answers, 0));
-                databaseManager.addQuestion(new Question("20?", answers, 0));*/
+                String[] answers = new String[]{"ArithmeticException", "Double.INFINITY", "NaN", "-0.0"};
+                databaseManager.addQuestion(new Question("Что вернет выражение 1.0/0.0?", answers, 1));
+
+                answers = new String[]{"break в try/catch", "Никак", "return в try/catch", "System.exit() в try/catch"};
+                databaseManager.addQuestion(new Question("Как избежать выполнения блока finally?", answers, 4));
 
             } catch (QuestionAlreadyExistsException e) {
                 e.printStackTrace();

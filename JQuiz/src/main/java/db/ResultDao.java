@@ -10,24 +10,9 @@ import java.util.List;
 
 public class ResultDao extends BaseDao {
 
-    public static class ResultSerializer implements Serializer<Result>, Serializable {
-        @Override
-        public void serialize(DataOutput2 out, Result result) throws IOException {
-            out.writeUTF(result.getName());
-            DATE.serialize(out, result.getDate());
-            INTEGER.serialize(out, result.getScore());
-        }
-
-        @Override
-        public Result deserialize(DataInput2 in, int i) throws IOException {
-            return new Result(in.readUTF(), DATE.deserialize(in, i), INTEGER.deserialize(in, i));
-        }
-    }
-
     private List<Result> results;
     private DB resultsDB;
-    private final String dbName = "/results.db";
-
+    private final static String dbName = "/results.db";
 
     public ResultDao(String pathToDbs) {
         super(pathToDbs);
@@ -70,6 +55,8 @@ public class ResultDao extends BaseDao {
         close();
     }
 
+    // todo
+    // open();  <action>  close();
     public long getSize() {
         open();
         long size = results.size();
@@ -113,5 +100,20 @@ public class ResultDao extends BaseDao {
     private void close() {
         resultsDB.close();
     }
+
+    public static class ResultSerializer implements Serializer<Result>, Serializable {
+        @Override
+        public void serialize(DataOutput2 out, Result result) throws IOException {
+            out.writeUTF(result.getName());
+            DATE.serialize(out, result.getDate());
+            INTEGER.serialize(out, result.getScore());
+        }
+
+        @Override
+        public Result deserialize(DataInput2 in, int i) throws IOException {
+            return new Result(in.readUTF(), DATE.deserialize(in, i), INTEGER.deserialize(in, i));
+        }
+    }
+
 
 }

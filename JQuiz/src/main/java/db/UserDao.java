@@ -10,23 +10,9 @@ import java.util.List;
 
 public class UserDao extends BaseDao {
 
-    public static class UserSerializer implements Serializer<User>, Serializable {
-        @Override
-        public void serialize(DataOutput2 out, User user) throws IOException {
-            out.writeUTF(user.getName());
-            out.writeUTF(user.getPassword());
-        }
-
-        @Override
-        public User deserialize(DataInput2 in, int i) throws IOException {
-            return new User(in.readUTF(), in.readUTF());
-        }
-    }
-
     private DB usersDB;
     private List<User> users;
-    private final String dbName = "/users.db";
-
+    private final static String dbName = "/users.db";
 
     public UserDao(String pathToDbs) {
         super(pathToDbs);
@@ -109,6 +95,19 @@ public class UserDao extends BaseDao {
 
     private void close() {
         usersDB.close();
+    }
+
+    public static class UserSerializer implements Serializer<User>, Serializable {
+        @Override
+        public void serialize(DataOutput2 out, User user) throws IOException {
+            out.writeUTF(user.getName());
+            out.writeUTF(user.getPassword());
+        }
+
+        @Override
+        public User deserialize(DataInput2 in, int i) throws IOException {
+            return new User(in.readUTF(), in.readUTF());
+        }
     }
 
 
