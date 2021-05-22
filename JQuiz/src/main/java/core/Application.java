@@ -43,7 +43,7 @@ public class Application {
                 databaseManager.addQuestion(new Question("Что вернет выражение 1.0/0.0?", answers, 1));
 
                 answers = new String[]{"break в try/catch", "Никак", "return в try/catch", "System.exit() в try/catch"};
-                databaseManager.addQuestion(new Question("Как избежать выполнения блока finally?", answers, 4));
+                databaseManager.addQuestion(new Question("Как избежать выполнения блока finally?", answers, 3));
 
             } catch (QuestionAlreadyExistsException e) {
                 e.printStackTrace();
