@@ -73,6 +73,7 @@ public class QuestionScreen extends BaseScreen {
     private void drawVariants() {
         for (int i = 0; i < 4; i++) {
             variants[i] = new JButton(question.getAnswers()[i]);
+            variants[i].setMargin(new Insets(0,0,0,0));
             variants[i].setBackground(VARIANT_COLOR);
             variants[i].setSize(variantSize);
             int posX = (width - 2 * variantSize.width - 20) / 2 + (variantSize.width + 20) * (i % 2);
