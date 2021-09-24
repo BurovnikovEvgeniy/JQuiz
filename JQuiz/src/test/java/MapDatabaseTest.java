@@ -4,20 +4,24 @@ import core.exceptions.UserAlreadyExistsException;
 import model.Question;
 import model.Result;
 import model.User;
-import org.junit.Assert;
+
+import static org.junit.Assert.*;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.Date;
 
-
-public class MapDatabaseIT {
-
+public class MapDatabaseTest {
     private DatabaseManager databaseManager;
+    private Result result;
 
     @Before
-    public void before() {
-        databaseManager = new DatabaseManager();
+    public void before() throws IOException {
+        databaseManager = new DatabaseManager("db_test");
+        databaseManager.createDbDirectory();
     }
 
     @Test
@@ -45,32 +49,28 @@ public class MapDatabaseIT {
         deleteResult();
     }
 
-    @Test
-    public void addOneUser() throws UserAlreadyExistsException {
+    private void addOneUser() throws UserAlreadyExistsException {
         long size = databaseManager.getUsersSize();
         databaseManager.addUser(new User("vanya", "qwerty"));
-        Assert.assertEquals(size + 1, databaseManager.getUsersSize());
+        assertEquals(size + 1, databaseManager.getUsersSize());
     }
 
-    @Test
-    public void addManyUsers() throws UserAlreadyExistsException {
+    private void addManyUsers() throws UserAlreadyExistsException {
         long size = databaseManager.getUsersSize();
 
         databaseManager.addUser(new User("petya", "1234"));
         databaseManager.addUser(new User("masha", "hrGS9SbWze"));
 
-        Assert.assertEquals(size + 2, databaseManager.getUsersSize());
+        assertEquals(size + 2, databaseManager.getUsersSize());
     }
 
-    @Test
-    public void addOneQuestion() throws QuestionAlreadyExistsException {
+    private void addOneQuestion() throws QuestionAlreadyExistsException {
         long size = databaseManager.getQuestionsSize();
         databaseManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
-        Assert.assertEquals(size + 1, databaseManager.getQuestionsSize());
+        assertEquals(size + 1, databaseManager.getQuestionsSize());
     }
 
-    @Test
-    public void addManyQuestions() throws QuestionAlreadyExistsException {
+    private void addManyQuestions() throws QuestionAlreadyExistsException {
         long size = databaseManager.getQuestionsSize();
 
         databaseManager.addQuestion(new Question("Question1?", new String[]{"one", "two", "three", "four"}, 2));
@@ -78,116 +78,99 @@ public class MapDatabaseIT {
         databaseManager.addQuestion(new Question("Question3?", new String[]{"one", "two", "three", "four"}, 4));
         databaseManager.addQuestion(new Question("Question4?", new String[]{"one", "two", "three", "four"}, 1));
 
-        Assert.assertEquals(size + 4, databaseManager.getQuestionsSize());
+        assertEquals(size + 4, databaseManager.getQuestionsSize());
     }
 
-    @Test
-    public void addOneResult() {
+    private void addOneResult() {
         long size = databaseManager.getResultsSize();
-        databaseManager.addResult(new Result("vanya", new Date(), 100));
-        Assert.assertEquals(size + 1, databaseManager.getResultsSize());
+        result = new Result("vanya", new Date(), 70);
+        databaseManager.addResult(result);
+        assertEquals(size + 1, databaseManager.getResultsSize());
     }
 
-    @Test
-    public void addManyResults() {
+    private void addManyResults() {
         long size = databaseManager.getResultsSize();
 
         databaseManager.addResult(new Result("vanya", new Date(), 80));
         databaseManager.addResult(new Result("petya", new Date(), 100));
         databaseManager.addResult(new Result("masha", new Date(), 120));
 
-        Assert.assertEquals(size + 3, databaseManager.getResultsSize());
+        assertEquals(size + 3, databaseManager.getResultsSize());
     }
 
-    @Test
-    public void findExistingUser() {
-        String requiredLogin = "vanya";
-        User requiredUser = databaseManager.findUser(requiredLogin);
-        Assert.assertNotNull(requiredUser);
+    private void findExistingUser() {
+        String requiredUsername = "vanya";
+        assertTrue(databaseManager.isExistUser(requiredUsername));
     }
 
-    @Test
-    public void findNotExistingUser() {
-        String requiredLogin = "kolya";
-        User requiredUser = databaseManager.findUser(requiredLogin);
-        Assert.assertNull(requiredUser);
+    private void findNotExistingUser() {
+        String requiredUsername = "kolya";
+        assertFalse(databaseManager.isExistUser(requiredUsername));
     }
 
-    @Test
-    public void findExistingQuestion() {
+    private void findExistingQuestion() {
         String requiredQuestionText = "How many?";
-        Question requiredQuestion = databaseManager.findQuestion(requiredQuestionText);
-        Assert.assertNotNull(requiredQuestion);
+        assertTrue(databaseManager.isExistQuestion(requiredQuestionText));
     }
 
-    @Test
-    public void findNotExistingQuestion() {
+    private void findNotExistingQuestion() {
         String requiredQuestionText = "QuestionDoesNotExist?";
-        Question requiredQuestion = databaseManager.findQuestion(requiredQuestionText);
-        Assert.assertNull(requiredQuestion);
+        assertFalse(databaseManager.isExistQuestion(requiredQuestionText));
     }
 
-    @Test
-    public void findExistingResult() {
-        String requiredLogin = "vanya";
-        Result requiredResult = databaseManager.findResult(requiredLogin);
-        Assert.assertNotNull(requiredResult);
+    private void findExistingResult() {
+        assertTrue(databaseManager.isExistResult(result));
     }
 
-    @Test
-    public void findNotExistingResult() {
-        String requiredLogin = "kolya";
-        Result requiredResult = databaseManager.findResult(requiredLogin);
-        Assert.assertNull(requiredResult);
+    private void findNotExistingResult() {
+        Result requiredResult = new Result("kolya", new Date(), 20);
+        assertFalse(databaseManager.isExistResult(requiredResult));
     }
 
-    @Test
-    public void updateUser() {
+    private void updateUser() {
         String requiredLogin = "vanya";
         User newUser = new User("vanya", "1234");
         databaseManager.updateUser(requiredLogin, newUser);
-        Assert.assertEquals("1234", databaseManager.findUser("vanya").getPassword());
+        assertEquals("1234", databaseManager.findUser("vanya").getPassword());
     }
 
-    @Test
-    public void updateQuestion() {
+    private void updateQuestion() {
         String requiredQuestionText = "How many?";
         Question newQuestion = new Question("How many?", new String[]{"one", "two", "three", "four"}, 3);
         databaseManager.updateQuestion(requiredQuestionText, newQuestion);
-        Assert.assertEquals(3, databaseManager.findQuestion(requiredQuestionText).getCorrectAnswer());
+        assertEquals(3, databaseManager.findQuestion(requiredQuestionText).getCorrectAnswer());
     }
 
-    @Test
-    public void updateResult() {
-        String requiredLogin = "vanya";
+    private void updateResult() {
         Result newResult = new Result("vanya", new Date(), 50);
-        databaseManager.updateResult(requiredLogin, newResult);
-        Assert.assertEquals(50, databaseManager.findResult(requiredLogin).getScore());
+        databaseManager.updateResult(result, newResult);
+        assertTrue(databaseManager.isExistResult(newResult));
+        assertFalse(databaseManager.isExistResult(result));
+        result = newResult;
     }
 
-
-    @Test
-    public void deleteUser() {
+    private void deleteUser() {
         long size = databaseManager.getUsersSize();
         String requiredLogin = "vanya";
         databaseManager.deleteUser(requiredLogin);
-        Assert.assertEquals(size - 1, databaseManager.getUsersSize());
+        assertEquals(size - 1, databaseManager.getUsersSize());
     }
 
-    @Test
-    public void deleteQuestion() {
+    private void deleteQuestion() {
         long size = databaseManager.getQuestionsSize();
         String requiredQuestionText = "How many?";
         databaseManager.deleteQuestion(requiredQuestionText);
-        Assert.assertEquals(size - 1, databaseManager.getQuestionsSize());
+        assertEquals(size - 1, databaseManager.getQuestionsSize());
     }
 
-    @Test
-    public void deleteResult() {
+    private void deleteResult() {
         long size = databaseManager.getResultsSize();
-        String requiredLogin = "vanya";
-        databaseManager.deleteResult(requiredLogin);
-        Assert.assertEquals(size - 1, databaseManager.getResultsSize());
+        databaseManager.deleteResult(result);
+        assertEquals(size - 1, databaseManager.getResultsSize());
     }
 
+    @After
+    public void after() throws IOException {
+        databaseManager.deleteDbDirectory();
+    }
 }

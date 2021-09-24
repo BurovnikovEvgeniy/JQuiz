@@ -7,8 +7,8 @@ public class QuestionManager {
 
     private final DatabaseManager databaseManager;
 
-    public QuestionManager() {
-        this.databaseManager = new DatabaseManager();
+    public QuestionManager(String dbFolderName) {
+        this.databaseManager = new DatabaseManager(dbFolderName);
     }
 
     public Question[] getAllQuestions() {
@@ -21,5 +21,9 @@ public class QuestionManager {
 
     public void addQuestion(Question question) throws QuestionAlreadyExistsException {
         databaseManager.addQuestion(question);
+    }
+
+    public void updateQuestion(Question oldQuestion, Question newQuestion) {
+        databaseManager.updateQuestion(oldQuestion.getQuestion(), newQuestion);
     }
 }

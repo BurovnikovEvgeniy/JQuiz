@@ -3,102 +3,60 @@ package db;
 import model.Result;
 import org.mapdb.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 
-public class ResultDao extends BaseDao {
+public class ResultDao extends BaseDao<Result> {
+    private static final String DB_NAME = "/results.db";
 
-    private List<Result> results;
-    private DB resultsDB;
-    private final static String dbName = "/results.db";
-
-    public ResultDao(String pathToDbs) {
-        super(pathToDbs);
-    }
-
-    public String getDbName() {
-        return dbName;
+    public ResultDao(String pathToDb) {
+        super(pathToDb, DB_NAME, "resultsList", new ResultSerializer());
     }
 
     public void addResult(Result newResult) {
         open();
-        results.add(newResult);
+        entities.add(newResult);
         close();
     }
 
-    public Result findResult(String name) {
-        open();
-        Result result = null;
-        for (Result r : results) {
-            if (r.getName().equals(name)) {
-                result = r;
-                break;
-            }
-        }
-        close();
-        return result;
+    public boolean isExistResult(Result result) {
+        return findResultIndex(result) > -1;
     }
 
-    public void updateResult(String name, Result updatedResult) {
-        int i = findResultIndex(findResult(name));
+    public void updateResult(Result oldResult, Result updatedResult) {
+        int i = findResultIndex(oldResult);
         open();
-        results.set(i, updatedResult);
+        entities.set(i, updatedResult);
         close();
     }
 
-    public void deleteResult(String name) {
-        int i = findResultIndex(findResult(name));
+    public void deleteResult(Result result) {
+        int i = findResultIndex(result);
         open();
-        results.remove(i);
+        entities.remove(i);
         close();
-    }
-
-    // todo
-    // open();  <action>  close();
-    public long getSize() {
-        open();
-        long size = results.size();
-        close();
-        return size;
     }
 
     public Result[] getAll() {
         open();
-        Result[] result = new Result[results.size()];
-        for (int i = 0; i < results.size(); i++) {
-            result[i] = results.get(i);
-        }
+        Result[] result = new Result[0];
+        result = entities.toArray(result);
         close();
         return result;
     }
 
     public boolean contains(Result result) {
         open();
-        boolean contains = results.contains(result);
+        boolean contains = entities.contains(result);
         close();
         return contains;
     }
 
     private int findResultIndex(Result result) {
         open();
-        int index = results.indexOf(result);
+        int index = entities.indexOf(result);
         close();
         return index;
-    }
-
-    private void open() {
-        resultsDB = DBMaker.fileDB(new File(pathToDbs + dbName))
-                .fileLockDisable()
-                .fileMmapEnable()
-                .closeOnJvmShutdown()
-                .make();
-        results = resultsDB.indexTreeList("resultsList", new ResultSerializer()).createOrOpen();
-    }
-
-    private void close() {
-        resultsDB.close();
     }
 
     public static class ResultSerializer implements Serializer<Result>, Serializable {
@@ -114,6 +72,4 @@ public class ResultDao extends BaseDao {
             return new Result(in.readUTF(), DATE.deserialize(in, i), INTEGER.deserialize(in, i));
         }
     }
-
-
 }

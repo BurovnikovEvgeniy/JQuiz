@@ -7,8 +7,8 @@ public class LogInManager {
 
     private final DatabaseManager databaseManager;
 
-    public LogInManager() {
-        this.databaseManager = new DatabaseManager();
+    public LogInManager(String dbFolderName) {
+        this.databaseManager = new DatabaseManager(dbFolderName);
     }
 
     public void logIn(

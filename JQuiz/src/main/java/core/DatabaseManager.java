@@ -14,37 +14,41 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class DatabaseManager {
+    private static final String PATH_TO_DBS = System.getProperty("user.home") + "/JQuiz/";
+
+    private final String dbFolderName;
     private final UserDao userDao;
     private final QuestionDao questionDao;
     private final ResultDao resultDao;
 
-    private final String pathToDbs = System.getProperty("user.home") + "/JQuiz/db";
-
-    public DatabaseManager() {
-        userDao = new UserDao(pathToDbs);
-        questionDao = new QuestionDao(pathToDbs);
-        resultDao = new ResultDao(pathToDbs);
+    public DatabaseManager(String dbFolderName) {
+        this.dbFolderName = dbFolderName;
+        userDao = new UserDao(PATH_TO_DBS + dbFolderName);
+        questionDao = new QuestionDao(PATH_TO_DBS + dbFolderName);
+        resultDao = new ResultDao(PATH_TO_DBS + dbFolderName);
     }
 
     public void createDbDirectory() throws IOException {
-        Files.createDirectories(Paths.get(pathToDbs));
+        Files.createDirectories(Paths.get(PATH_TO_DBS + dbFolderName));
     }
 
     public void deleteDbDirectory() throws IOException {
-        if (Files.exists(Paths.get(pathToDbs))) {
-            Files.delete(Paths.get(pathToDbs + userDao.getDbName()));
-            Files.delete(Paths.get(pathToDbs + resultDao.getDbName()));
-            Files.delete(Paths.get(pathToDbs + questionDao.getDbName()));
-            Files.delete(Paths.get(pathToDbs));
+        if (Files.exists(Paths.get(PATH_TO_DBS + dbFolderName))) {
+            System.gc();
+            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName + userDao.getDbName()));
+            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName + resultDao.getDbName()));
+            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName + questionDao.getDbName()));
+            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName));
         }
     }
 
-    public String getPathToDbs() {
-        return pathToDbs;
+
+    public boolean isExistUser(String username) {
+        return userDao.contains(username);
     }
 
     public void addUser(User newUser) throws UserAlreadyExistsException {
-        if (userDao.contains(newUser)) {
+        if (userDao.contains(newUser.getName())) {
             throw new UserAlreadyExistsException("Пользователь с таким именем уже существует!");
         }
         userDao.addUser(newUser);
@@ -67,8 +71,12 @@ public class DatabaseManager {
     }
 
 
+    public boolean isExistQuestion(String question) {
+        return questionDao.contains(question);
+    }
+
     public void addQuestion(Question newQuestion) throws QuestionAlreadyExistsException {
-        if (questionDao.contains(newQuestion)) {
+        if (questionDao.contains(newQuestion.getQuestion())) {
             throw new QuestionAlreadyExistsException("Такой вопрос уже существует!");
         }
         questionDao.addQuestion(newQuestion);
@@ -95,22 +103,22 @@ public class DatabaseManager {
     }
 
 
+    public boolean isExistResult(Result result) {
+        return resultDao.isExistResult(result);
+    }
+
     public void addResult(Result newResult) {
         if (!resultDao.contains(newResult)) {
             resultDao.addResult(newResult);
         }
     }
 
-    public Result findResult(String name) {
-        return resultDao.findResult(name);
+    public void updateResult(Result oldResult, Result updatedResult) {
+        resultDao.updateResult(oldResult, updatedResult);
     }
 
-    public void updateResult(String name, Result updatedResult) {
-        resultDao.updateResult(name, updatedResult);
-    }
-
-    public void deleteResult(String name) {
-        resultDao.deleteResult(name);
+    public void deleteResult(Result result) {
+        resultDao.deleteResult(result);
     }
 
     public long getResultsSize() {

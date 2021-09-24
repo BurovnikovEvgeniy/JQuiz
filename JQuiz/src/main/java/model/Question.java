@@ -9,9 +9,9 @@ public class Question implements Serializable {
     private final String[] answers;
     private final int correctAnswer;
 
-    public Question(String question, String[] variants, int correctAnswerIndex) {
+    public Question(String question, String[] answers, int correctAnswerIndex) {
         this.question = question;
-        this.answers = variants;
+        this.answers = answers;
         this.correctAnswer = correctAnswerIndex;
     }
 

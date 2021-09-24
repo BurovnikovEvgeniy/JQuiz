@@ -4,35 +4,26 @@ import model.Question;
 import org.mapdb.*;
 import org.mapdb.serializer.SerializerArray;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 
-public class QuestionDao extends BaseDao {
+public class QuestionDao extends BaseDao<Question> {
+    private static final String DB_NAME = "/questions.db";
 
-    private List<Question> questions;
-    private DB questionsDB;
-    private final static String dbName = "/questions.db";
-
-    public QuestionDao(String pathToDbs) {
-        super(pathToDbs);
-    }
-
-    public String getDbName() {
-        return dbName;
+    public QuestionDao(String pathToDb) {
+        super(pathToDb, DB_NAME, "questionsList", new QuestionSerializer());
     }
 
     public void addQuestion(Question newQuestion) {
         open();
-        questions.add(newQuestion);
+        entities.add(newQuestion);
         close();
     }
 
     public Question findQuestion(String question) {
         open();
         Question q = null;
-        for (Question question1 : questions) {
+        for (Question question1 : entities) {
             if (question1.getQuestion().equals(question)) {
                 q = question1;
                 break;
@@ -45,37 +36,30 @@ public class QuestionDao extends BaseDao {
     public void updateQuestion(String question, Question updatedQuestion) {
         int i = findQuestionIndex(findQuestion(question));
         open();
-        questions.set(i, updatedQuestion);
+        entities.set(i, updatedQuestion);
         close();
     }
 
     public void deleteQuestion(String question) {
         int i = findQuestionIndex(findQuestion(question));
         open();
-        questions.remove(i);
+        entities.remove(i);
         close();
-    }
-
-    public long getSize() {
-        open();
-        long size = questions.size();
-        close();
-        return size;
     }
 
     public Question[] getAll() {
         open();
         Question[] result = new Question[0];
-        result = questions.toArray(result);
+        result = entities.toArray(result);
         close();
         return result;
     }
 
-    public boolean contains(Question question) {
+    public boolean contains(String question) {
         open();
         boolean contains = false;
-        for (Question q : questions) {
-            if (q.getQuestion().equals(question.getQuestion())) {
+        for (Question q : entities) {
+            if (q.getQuestion().equals(question)) {
                 contains = true;
                 break;
             }
@@ -86,22 +70,15 @@ public class QuestionDao extends BaseDao {
 
     private int findQuestionIndex(Question question) {
         open();
-        int index = questions.indexOf(question);
+        int index = -1;
+        for (int i = 0; i < entities.size(); i++) {
+            if (entities.get(i).getQuestion().equals(question.getQuestion())) {
+                index = i;
+                break;
+            }
+        }
         close();
         return index;
-    }
-
-    private void open() {
-        questionsDB = DBMaker.fileDB(new File(pathToDbs + dbName))
-                .fileLockDisable()
-                .fileMmapEnable()
-                .closeOnJvmShutdown()
-                .make();
-        questions = questionsDB.indexTreeList("questionsList", new QuestionSerializer()).createOrOpen();
-    }
-
-    private void close() {
-        questionsDB.close();
     }
 
     private static class QuestionSerializer implements Serializer<Question>, Serializable {

@@ -1,16 +1,19 @@
 package ui;
 
-import core.LogInManager;
 import core.exceptions.*;
 import model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 class LogInScreen extends BaseScreen {
+    private final List<Component> components;
 
     LogInScreen(JFrame parent) {
         super(parent);
+        this.components = new ArrayList<>();
         repaint();
     }
 
@@ -28,12 +31,13 @@ class LogInScreen extends BaseScreen {
         JTextField loginField = createTextField(
                 (width - componentSize.width) / 2,
                 (int) (height * 0.28),
-                "Введите логин",
                 20,
                 componentSize.width,
-                componentSize.height
+                componentSize.height,
+                SwingConstants.CENTER
         );
         add(loginField);
+        components.add(loginField);
         description = "Пароль:";
         drawDescription(
                 g2,
@@ -42,33 +46,36 @@ class LogInScreen extends BaseScreen {
         );
         JPasswordField passwordField = createPasswordField((width - componentSize.width) / 2, (int) (height * 0.42));
         add(passwordField);
+        components.add(passwordField);
         JButton enterButton = createButton((width - componentSize.width) / 2, (int) (height * 0.56), "Войти");
         enterButton.addActionListener(actionEvent -> {
-            LogInManager logInManager = new LogInManager();
-            if (logInManager.isAdmin(loginField.getText(), new String(passwordField.getPassword()))) {
+            MainFrame mainFrame = (MainFrame) parentFrame;
+            if (mainFrame.getLogInManager().isAdmin(loginField.getText(), new String(passwordField.getPassword()))) {
                 parentFrame.getContentPane().remove(0);
                 parentFrame.add(new AdminScreen(parentFrame));
                 parentFrame.setVisible(true);
             } else {
                 try {
-                    logInManager.logIn(loginField.getText(), new String(passwordField.getPassword()));
+                    mainFrame.getLogInManager().logIn(loginField.getText(), new String(passwordField.getPassword()));
                     parentFrame.getContentPane().remove(0);
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                     parentFrame.setVisible(true);
                 } catch (NullFieldsException e) {
                     System.out.println(e.getMessage());
                 } catch (WrongPasswordException | EmptyPasswordException | NoSuchUserException | EmptyUsernameException e) {
-                    SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
+                    SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage(), false).setVisible(true));
                 }
             }
         });
         add(enterButton);
+        components.add(enterButton);
         drawRegisterButton();
         drawGuestButton();
+        new KeyboardListener(components, this);
     }
 
     private void drawGreetingString(Graphics2D g2) {
-        g2.setFont(font20);
+        g2.setFont(greetingFont);
         FontMetrics fm = g2.getFontMetrics();
         String greeting = "Добро пожаловать в систему тестирования!";
         int posX = (width - fm.stringWidth(greeting)) / 2;
@@ -77,7 +84,7 @@ class LogInScreen extends BaseScreen {
     }
 
     private void drawDescription(Graphics2D g2, String description, int y) {
-        g2.setFont(font14);
+        g2.setFont(basicFont);
         FontMetrics fm = g2.getFontMetrics();
         int x = (width - componentSize.width) / 2 - fm.stringWidth(description) - 10;
         g2.drawString(description, x, y);
@@ -91,6 +98,7 @@ class LogInScreen extends BaseScreen {
             parentFrame.setVisible(true);
         });
         add(registerButton);
+        components.add(registerButton);
     }
 
     private void drawGuestButton() {
@@ -101,5 +109,6 @@ class LogInScreen extends BaseScreen {
             parentFrame.setVisible(true);
         });
         add(guestButton);
+        components.add(guestButton);
     }
 }

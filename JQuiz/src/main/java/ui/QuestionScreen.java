@@ -5,6 +5,8 @@ import model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionScreen extends BaseScreen {
     private static final Color VARIANT_COLOR = new Color(214, 201, 201);
@@ -14,16 +16,18 @@ public class QuestionScreen extends BaseScreen {
     private final int questionsCount;
     private final Question question;
     private final JButton[] variants;
+    private final List<Component> components;
     private int chosenIndex;
 
     QuestionScreen(JFrame parent, User user, int number, int count, Question question) {
         super(parent);
         this.user = user;
-        this.variantSize = new Dimension((int) (width * 0.35), (int) (height * 0.13));
+        this.variantSize = new Dimension((int) (width * 0.44), (int) (height * 0.14));
         this.serialNumber = number;
         this.questionsCount = count;
         this.question = question;
         this.variants = new JButton[4];
+        this.components = new ArrayList<>();
         this.chosenIndex = -1;
         repaint();
     }
@@ -36,12 +40,13 @@ public class QuestionScreen extends BaseScreen {
         drawSerialNumber(g2);
         drawQuestion();
         drawVariants();
-        drawMenuButton();
         drawNextButton();
+        drawMenuButton();
+        new KeyboardListener(components, this);
     }
 
     private void drawUsername(Graphics2D g2) {
-        g2.setFont(font14);
+        g2.setFont(basicFont);
         if (user == null) {
             g2.drawString("Гостевой режим", usernameX, usernameY);
         } else {
@@ -50,7 +55,7 @@ public class QuestionScreen extends BaseScreen {
     }
 
     private void drawSerialNumber(Graphics2D g2) {
-        g2.setFont(font14);
+        g2.setFont(basicFont);
         FontMetrics fm = g2.getFontMetrics();
         String serialNumber = this.serialNumber + "/" + questionsCount;
         int posX = (width - fm.stringWidth(serialNumber)) / 2;
@@ -60,12 +65,13 @@ public class QuestionScreen extends BaseScreen {
 
     private void drawQuestion() {
         JTextArea textArea = new JTextArea(question.getQuestion());
-        textArea.setSize(2 * variantSize.width, 80);
+        textArea.setSize((int) (width * 0.8), 95);
         textArea.setBackground(parentFrame.getContentPane().getBackground());
-        textArea.setFont(font16);
+        Font font = new Font("TimesRoman", Font.PLAIN, 16);
+        textArea.setFont(font);
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
-        textArea.setLocation((width - textArea.getSize().width) / 2, 50);
+        textArea.setLocation((width - textArea.getSize().width) / 2, 35);
         textArea.setEditable(false);
         add(textArea);
     }
@@ -73,17 +79,17 @@ public class QuestionScreen extends BaseScreen {
     private void drawVariants() {
         for (int i = 0; i < 4; i++) {
             variants[i] = new JButton(question.getAnswers()[i]);
-            variants[i].setMargin(new Insets(0,0,0,0));
+            variants[i].setMargin(new Insets(0, 0, 0, 0));
             variants[i].setBackground(VARIANT_COLOR);
             variants[i].setSize(variantSize);
-            int posX = (width - 2 * variantSize.width - 20) / 2 + (variantSize.width + 20) * (i % 2);
-            int posY = height / 2 - variantSize.height + (variantSize.height + 20) * (i / 2);
+            int posX = (width - 2 * variantSize.width - 14) / 2 + (variantSize.width + 14) * (i % 2);
+            int posY = height / 2 - variantSize.height + (variantSize.height + 14) * (i / 2);
             variants[i].setLocation(posX, posY);
-            variants[i].setFont(font14);
+            variants[i].setFont(basicFont);
             int finalI = i;
             variants[i].addActionListener(actionEvent -> {
                 if (chosenIndex != -1) {
-                    SwingUtilities.invokeLater(() -> new NotificationFrame("Вы уже выбрали ответ!").setVisible(true));
+                    SwingUtilities.invokeLater(() -> new NotificationFrame("Вы уже выбрали ответ!", false).setVisible(true));
                 } else {
                     chosenIndex = finalI;
                     if (finalI == question.getCorrectAnswer()) {
@@ -94,6 +100,7 @@ public class QuestionScreen extends BaseScreen {
                 }
             });
             add(variants[i]);
+            components.add(variants[i]);
         }
     }
 
@@ -106,6 +113,7 @@ public class QuestionScreen extends BaseScreen {
             parentFrame.setVisible(true);
         });
         add(menu);
+        components.add(menu);
     }
 
     private void drawNextButton() {
@@ -118,12 +126,13 @@ public class QuestionScreen extends BaseScreen {
         }
         nextQuestion.addActionListener(actionEvent -> {
             if (chosenIndex == -1) {
-                SwingUtilities.invokeLater(() -> new NotificationFrame("Вы не выбрали ответ!").setVisible(true));
+                SwingUtilities.invokeLater(() -> new NotificationFrame("Вы не выбрали ответ!", false).setVisible(true));
             } else {
                 TestScreen ts = (TestScreen) parentFrame.getContentPane().getComponent(0);
                 ts.drawQuestion(chosenIndex == question.getCorrectAnswer());
             }
         });
         add(nextQuestion);
+        components.add(nextQuestion);
     }
 }

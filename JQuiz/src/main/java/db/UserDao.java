@@ -3,28 +3,19 @@ package db;
 import model.User;
 import org.mapdb.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.List;
 
-public class UserDao extends BaseDao {
+public class UserDao extends BaseDao<User> {
+    private static final String DB_NAME = "/users.db";
 
-    private DB usersDB;
-    private List<User> users;
-    private final static String dbName = "/users.db";
-
-    public UserDao(String pathToDbs) {
-        super(pathToDbs);
-    }
-
-    public String getDbName() {
-        return dbName;
+    public UserDao(String pathToDb) {
+        super(pathToDb, DB_NAME, "usersList", new UserSerializer());
     }
 
     public void addUser(User newUser) {
         open();
-        users.add(newUser);
+        entities.add(newUser);
         close();
 
     }
@@ -32,7 +23,7 @@ public class UserDao extends BaseDao {
     public User findUser(String name) {
         open();
         User user = null;
-        for (User u : users) {
+        for (User u : entities) {
             if (u.getName().equals(name)) {
                 user = u;
                 break;
@@ -45,29 +36,22 @@ public class UserDao extends BaseDao {
     public void updateUser(String name, User updatedUser) {
         int i = findUserIndex(findUser(name));
         open();
-        users.set(i, updatedUser);
+        entities.set(i, updatedUser);
         close();
     }
 
     public void deleteUser(String name) {
         int i = findUserIndex(findUser(name));
         open();
-        users.remove(i);
+        entities.remove(i);
         close();
     }
 
-    public long getSize() {
-        open();
-        long size = users.size();
-        close();
-        return size;
-    }
-
-    public boolean contains(User user) {
+    public boolean contains(String username) {
         open();
         boolean contains = false;
-        for (User u : users) {
-            if (u.getName().equals(user.getName())) {
+        for (User u : entities) {
+            if (u.getName().equals(username)) {
                 contains = true;
                 break;
             }
@@ -78,23 +62,9 @@ public class UserDao extends BaseDao {
 
     private int findUserIndex(User user) {
         open();
-        int index = users.indexOf(user);
+        int index = entities.indexOf(user);
         close();
         return index;
-    }
-
-    private void open() {
-        usersDB = DBMaker.fileDB(new File(pathToDbs + dbName))
-                .fileLockDisable()
-                .fileMmapEnable()
-                .checksumHeaderBypass()
-                .closeOnJvmShutdown()
-                .make();
-        users = usersDB.indexTreeList("usersList", new UserSerializer()).createOrOpen();
-    }
-
-    private void close() {
-        usersDB.close();
     }
 
     public static class UserSerializer implements Serializer<User>, Serializable {
@@ -109,6 +79,4 @@ public class UserDao extends BaseDao {
             return new User(in.readUTF(), in.readUTF());
         }
     }
-
-
 }

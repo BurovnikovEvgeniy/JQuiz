@@ -1,6 +1,5 @@
 package ui;
 
-import core.LogInManager;
 import core.exceptions.EmptyPasswordException;
 import core.exceptions.EmptyUsernameException;
 import core.exceptions.UserAlreadyExistsException;
@@ -8,17 +7,19 @@ import model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisterScreen extends BaseScreen {
     private final int componentX;
     private final boolean isAdmin;
-    private final LogInManager logInManager;
+    private final List<Component> components;
 
     RegisterScreen(JFrame parent, boolean isAdmin) {
         super(parent);
         this.componentX = (width - componentSize.width) / 2;
         this.isAdmin = isAdmin;
-        this.logInManager = new LogInManager();
+        this.components = new ArrayList<>();
         repaint();
     }
 
@@ -26,11 +27,6 @@ public class RegisterScreen extends BaseScreen {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if (isAdmin) {
-            drawGreetingString(g2);
-        } else {
-            drawBackButton();
-        }
         String description = "Логин:";
         drawDescription(
                 g2,
@@ -40,16 +36,17 @@ public class RegisterScreen extends BaseScreen {
         JTextField loginField = createTextField(
                 componentX,
                 (int) (height * 0.28),
-                "Введите логин",
                 20,
                 componentSize.width,
-                componentSize.height
+                componentSize.height,
+                SwingConstants.CENTER
         );
         if (isAdmin) {
             loginField.setText("admin");
             loginField.setEditable(false);
         }
         add(loginField);
+        components.add(loginField);
         description = "Пароль:";
         drawDescription(
                 g2,
@@ -58,35 +55,44 @@ public class RegisterScreen extends BaseScreen {
         );
         JPasswordField passwordField = createPasswordField(componentX, (int) (height * 0.42));
         add(passwordField);
-        JButton button = createButton(componentX, (int) (height * 0.56), "Зарегистрироваться");
-        button.addActionListener(actionEvent -> {
+        components.add(passwordField);
+        JButton register = createButton(componentX, (int) (height * 0.56), "Зарегистрироваться");
+        register.addActionListener(actionEvent -> {
             try {
+                MainFrame mainFrame = (MainFrame) parentFrame;
                 if (isAdmin) {
-                    logInManager.registerAdmin(loginField.getText(), new String(passwordField.getPassword()));
+                    mainFrame.getLogInManager().registerAdmin(loginField.getText(), new String(passwordField.getPassword()));
                     parentFrame.getContentPane().remove(0);
                     parentFrame.add(new LogInScreen(parentFrame));
                 } else {
-                    logInManager.register(loginField.getText(), new String(passwordField.getPassword()));
+                    mainFrame.getLogInManager().register(loginField.getText(), new String(passwordField.getPassword()));
                     parentFrame.getContentPane().remove(0);
                     parentFrame.add(new TestScreen(parentFrame, new User(loginField.getText(), new String(passwordField.getPassword()))));
                 }
                 parentFrame.setVisible(true);
             } catch (UserAlreadyExistsException | EmptyPasswordException | EmptyUsernameException e) {
-                SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage()).setVisible(true));
+                SwingUtilities.invokeLater(() -> new NotificationFrame(e.getMessage(), false).setVisible(true));
             }
         });
-        add(button);
+        add(register);
+        components.add(register);
+        if (isAdmin) {
+            drawGreetingString(g2);
+        } else {
+            drawBackButton();
+        }
+        new KeyboardListener(components, this);
     }
 
     private void drawDescription(Graphics2D g2, String description, int y) {
-        g2.setFont(font14);
+        g2.setFont(basicFont);
         FontMetrics fm = g2.getFontMetrics();
         int x = (width - componentSize.width) / 2 - fm.stringWidth(description) - 10;
         g2.drawString(description, x, y);
     }
 
     private void drawGreetingString(Graphics2D g2) {
-        g2.setFont(font20);
+        g2.setFont(greetingFont);
         FontMetrics fm = g2.getFontMetrics();
         String greeting = "Для начала работы создайте аккаунт администратора";
         int posX = (width - fm.stringWidth(greeting)) / 2;
@@ -101,6 +107,7 @@ public class RegisterScreen extends BaseScreen {
             parentFrame.add(new LogInScreen(parentFrame));
             parentFrame.setVisible(true);
         });
+        components.add(backButton);
         add(backButton);
     }
 }

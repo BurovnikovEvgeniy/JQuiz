@@ -1,24 +1,21 @@
 package ui;
 
-import core.LogInManager;
-import core.QuestionManager;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AdminScreen extends BaseScreen {
     private final int buttonX;
     private final String[] items;
-    private final LogInManager logInManager;
-    private final QuestionManager questionManager;
+    private final List<Component> components;
 
     AdminScreen(JFrame parent) {
         super(parent);
         this.componentSize = new Dimension((int) (width * 0.37), (int) (height * 0.1));
         this.buttonX = (width - componentSize.width) / 2;
         this.items = new String[]{"Сменить пароль"};
-        this.logInManager = new LogInManager();
-        this.questionManager = new QuestionManager();
+        this.components = new ArrayList<>();
         repaint();
     }
 
@@ -26,76 +23,67 @@ public class AdminScreen extends BaseScreen {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        drawSettingsBox();
         drawUsername(g2);
-        drawExitButton();
-        drawShowQuestionsButton();
+        drawExitButton(components);
         drawAddQuestionButton();
-        drawDeleteQuestionButton();
-        drawDeleteResultButton();
+        drawShowQuestionsBaseButton();
+        drawShowResultBaseButton();
+        drawSettingsBox();
+        new KeyboardListener(components, this);
     }
 
     private void drawSettingsBox() {
-        JComboBox comboBox = new JComboBox(items);
-        comboBox.setToolTipText("Настройки");
-        comboBox.setFont(font14);
+        JComboBox<String> comboBox = createComboBox(items, "Администратор");
         comboBox.addActionListener(actionEvent -> {
-            JComboBox box = (JComboBox) actionEvent.getSource();
-            String item = (String) box.getSelectedItem();
-            if (item != null && item.equals("Сменить пароль")) {
-                parentFrame.getContentPane().remove(0);
-                parentFrame.add(new ChangePasswordScreen(parentFrame, logInManager.getAdmin()));
-                parentFrame.setVisible(true);
+            if (((JComboBox<?>) actionEvent.getSource()).getSelectedItem() instanceof String) {
+                String item = (String) ((JComboBox<?>) actionEvent.getSource()).getSelectedItem();
+                if (item != null && item.equals("Сменить пароль")) {
+                    parentFrame.getContentPane().remove(0);
+                    MainFrame mainFrame = (MainFrame) parentFrame;
+                    parentFrame.add(new ChangePasswordScreen(parentFrame, mainFrame.getLogInManager().getAdmin()));
+                    parentFrame.setVisible(true);
+                }
             }
         });
-        FontMetrics fm = getFontMetrics(font14);
-        comboBox.setLocation(usernameX + fm.stringWidth("Администратор") + 10, 0);
-        comboBox.setSize(fm.stringWidth(items[0] + 20), 20);
         add(comboBox);
+        components.add(comboBox);
     }
 
     private void drawUsername(Graphics2D g2) {
-        g2.setFont(font14);
+        g2.setFont(basicFont);
         g2.drawString("Администратор", usernameX, usernameY);
     }
 
-    private void drawShowQuestionsButton() {
-        JButton showQuestions = createButton(buttonX, (int) (height * 0.22), "Посмотреть базу вопросов");
-        showQuestions.addActionListener(actionEvent -> {
-            parentFrame.getContentPane().remove(0);
-            addScrollScreen(new QuestionsTableScreen(parentFrame, questionManager));
-            parentFrame.setVisible(true);
-        });
-        add(showQuestions);
-    }
-
     private void drawAddQuestionButton() {
-        JButton addQuestion = createButton(buttonX, (int) (height * 0.37), "Добавить вопрос");
+        JButton addQuestion = createButton(buttonX, (int) (height * 0.3), "Добавить вопрос");
         addQuestion.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            parentFrame.add(new AddQuestionScreen(parentFrame, questionManager));
+            parentFrame.add(new AddQuestionScreen(parentFrame));
             parentFrame.setVisible(true);
         });
         add(addQuestion);
+        components.add(addQuestion);
     }
 
-    private void drawDeleteQuestionButton() {
-        JButton deleteQuestion = createButton(buttonX, (int) (height * 0.52), "Удалить вопрос");
-        deleteQuestion.addActionListener(actionEvent -> {
+    private void drawShowQuestionsBaseButton() {
+        JButton showQuestions = createButton(buttonX, (int) (height * 0.45), "База вопросов");
+        showQuestions.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            addScrollScreen(new DeleteQuestionScreen(parentFrame, questionManager));
+            parentFrame.add(new QuestionsBaseScreen(parentFrame, 0));
             parentFrame.setVisible(true);
         });
-        add(deleteQuestion);
+        add(showQuestions);
+        components.add(showQuestions);
     }
 
-    private void drawDeleteResultButton() {
-        JButton deleteResult = createButton(buttonX, (int) (height * 0.67), "Удалить запись результата");
-        deleteResult.addActionListener(actionEvent -> {
+    private void drawShowResultBaseButton() {
+        JButton showResults = createButton(buttonX, (int) (height * 0.6), "База результатов");
+        showResults.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            addScrollScreen(new DeleteResultScreen(parentFrame));
+            parentFrame.add(new ResultsBaseScreen(parentFrame, 0));
             parentFrame.setVisible(true);
         });
-        add(deleteResult);
+        add(showResults);
+        components.add(showResults);
     }
 }

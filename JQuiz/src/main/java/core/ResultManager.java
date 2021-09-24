@@ -6,8 +6,8 @@ public class ResultManager {
 
     private final DatabaseManager databaseManager;
 
-    public ResultManager() {
-        this.databaseManager = new DatabaseManager();
+    public ResultManager(String dbFolderName) {
+        this.databaseManager = new DatabaseManager(dbFolderName);
     }
 
     public void saveResults(Result result) {
@@ -19,6 +19,6 @@ public class ResultManager {
     }
 
     public void deleteResult(Result result) {
-        databaseManager.deleteResult(result.getName());
+        databaseManager.deleteResult(result);
     }
 }

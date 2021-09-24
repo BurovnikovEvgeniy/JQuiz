@@ -1,13 +1,14 @@
 package ui;
 
-import core.QuestionManager;
 import model.Question;
 import model.Result;
 import model.User;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class TestScreen extends BaseScreen {
     private final User user;
@@ -15,16 +16,18 @@ public class TestScreen extends BaseScreen {
     private final Question[] questions;
     private final boolean[] answers;
     private final String[] items;
+    private final List<Component> components;
     private int currentQuestion;
 
     TestScreen(JFrame parent, User user) {
         super(parent);
         this.user = user;
-        QuestionManager questionManager = new QuestionManager();
-        this.questions = questionManager.getAllQuestions();
+        MainFrame mainFrame = (MainFrame) parentFrame;
+        this.questions = mainFrame.getQuestionManager().getAllQuestions();
         this.questionsCount = this.questions.length;
         this.answers = new boolean[questionsCount];
         this.items = new String[]{"Сменить пароль"};
+        this.components = new ArrayList<>();
         currentQuestion = 0;
         repaint();
     }
@@ -33,37 +36,35 @@ public class TestScreen extends BaseScreen {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        if (user != null) {
-            drawSettingsBox();
-        }
         drawUsername(g2);
-        drawExitButton();
+        drawExitButton(components);
         drawGreetingString(g2);
         drawShowTableButton();
         drawStartTestButton();
+        if (user != null) {
+            drawSettingsBox();
+        }
+        new KeyboardListener(components, this);
     }
 
     private void drawSettingsBox() {
-        JComboBox comboBox = new JComboBox(items);
-        comboBox.setToolTipText("Настройки");
-        comboBox.setFont(font14);
+        JComboBox<String> comboBox = createComboBox(items, user == null ? "Гостевой режим" : user.getName());
         comboBox.addActionListener(actionEvent -> {
-            JComboBox box = (JComboBox) actionEvent.getSource();
-            String item = (String) box.getSelectedItem();
-            if (item != null && item.equals("Сменить пароль")) {
-                parentFrame.getContentPane().remove(0);
-                parentFrame.add(new ChangePasswordScreen(parentFrame, user));
-                parentFrame.setVisible(true);
+            if (((JComboBox<?>) actionEvent.getSource()).getSelectedItem() instanceof String) {
+                String item = (String) ((JComboBox<?>) actionEvent.getSource()).getSelectedItem();
+                if (item != null && item.equals("Сменить пароль")) {
+                    parentFrame.getContentPane().remove(0);
+                    parentFrame.add(new ChangePasswordScreen(parentFrame, user));
+                    parentFrame.setVisible(true);
+                }
             }
         });
-        FontMetrics fm = getFontMetrics(font14);
-        comboBox.setLocation(usernameX + fm.stringWidth(user == null ? "Гостевой режим" : user.getName()) + 10, 0);
-        comboBox.setSize(fm.stringWidth(items[0] + 20), 20);
         add(comboBox);
+        components.add(comboBox);
     }
 
     private void drawUsername(Graphics2D g2) {
-        g2.setFont(font14);
+        g2.setFont(basicFont);
         if (user == null) {
             g2.drawString("Гостевой режим", usernameX, usernameY);
         } else {
@@ -72,7 +73,7 @@ public class TestScreen extends BaseScreen {
     }
 
     private void drawGreetingString(Graphics2D g2) {
-        g2.setFont(font20);
+        g2.setFont(greetingFont);
         FontMetrics fm = g2.getFontMetrics();
         String greeting = "Проверь свои знания языка программирования";
         int x = ((width - fm.stringWidth(greeting)) / 2);
@@ -88,26 +89,25 @@ public class TestScreen extends BaseScreen {
         JButton showTable = createButton(width / 2 - 20 - componentSize.width, (int) (height * 0.67), "Посмотреть таблицу");
         showTable.addActionListener(actionEvent -> {
             parentFrame.getContentPane().remove(0);
-            addScrollScreen(new ResultsTableScreen(parentFrame, user));
+            parentFrame.add(new ResultsTableScreen(parentFrame, user, 0));
             parentFrame.setVisible(true);
         });
         add(showTable);
+        components.add(showTable);
     }
 
     private void drawStartTestButton() {
         JButton startTest = createButton(width / 2 + 20, (int) (height * 0.67), "Пройти тест");
         startTest.addActionListener(actionEvent -> drawQuestion(true));
         add(startTest);
+        components.add(startTest);
     }
 
     void drawQuestion(boolean answer) {
-
         if (questionsCount == 0) {
-            String message = "В тесте нет вопросов!";
-            SwingUtilities.invokeLater(() -> new NotificationFrame(message).setVisible(true));
+            SwingUtilities.invokeLater(() -> new NotificationFrame("В тесте нет вопросов!", false).setVisible(true));
             return;
         }
-
         if (currentQuestion < questionsCount) {
             if (currentQuestion > 0) {
                 answers[currentQuestion - 1] = answer;
