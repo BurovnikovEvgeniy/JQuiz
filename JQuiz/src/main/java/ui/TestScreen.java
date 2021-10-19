@@ -12,19 +12,20 @@ import java.util.List;
 
 public class TestScreen extends BaseScreen {
     private final User user;
-    private final int questionsCount;
     private final Question[] questions;
     private final boolean[] answers;
     private final String[] items;
     private final List<Component> components;
+    private int questionsCount;
     private int currentQuestion;
 
     TestScreen(JFrame parent, User user) {
         super(parent);
         this.user = user;
         MainFrame mainFrame = (MainFrame) parentFrame;
-        this.questions = mainFrame.getQuestionManager().getAllQuestions();
-        this.questionsCount = this.questions.length;
+        this.questionsCount = 10;
+        this.questions = mainFrame.getQuestionManager().getTestQuestions(this.questionsCount);
+        this.questionsCount = questions.length;
         this.answers = new boolean[questionsCount];
         this.items = new String[]{"Сменить пароль"};
         this.components = new ArrayList<>();
