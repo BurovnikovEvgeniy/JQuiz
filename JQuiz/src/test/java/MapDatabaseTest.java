@@ -1,4 +1,5 @@
 import core.DatabaseManager;
+import core.QuestionManager;
 import core.exceptions.QuestionAlreadyExistsException;
 import core.exceptions.UserAlreadyExistsException;
 import model.Question;
@@ -16,12 +17,14 @@ import java.util.Date;
 
 public class MapDatabaseTest {
     private DatabaseManager databaseManager;
+    private QuestionManager questionManager;
     private Result result;
 
     @Before
     public void before() throws IOException {
         databaseManager = new DatabaseManager("db_test");
         databaseManager.createDbDirectory();
+        questionManager = new QuestionManager("db_test");
     }
 
     @Test
@@ -47,6 +50,9 @@ public class MapDatabaseTest {
         deleteUser();
         deleteQuestion();
         deleteResult();
+
+        countOfRandomQuestions();
+        isDifferentRandomQuestions();
     }
 
     private void addOneUser() throws UserAlreadyExistsException {
@@ -167,6 +173,26 @@ public class MapDatabaseTest {
         long size = databaseManager.getResultsSize();
         databaseManager.deleteResult(result);
         assertEquals(size - 1, databaseManager.getResultsSize());
+    }
+
+    private void countOfRandomQuestions() {
+        Question[] allQuestions = questionManager.getAllQuestions();
+        Question[] randomQuestions = questionManager.getTestQuestions(allQuestions.length - 1);
+        assertEquals(randomQuestions.length, allQuestions.length - 1);
+        randomQuestions = questionManager.getTestQuestions(allQuestions.length);
+        assertEquals(randomQuestions.length, allQuestions.length);
+        randomQuestions = questionManager.getTestQuestions(allQuestions.length + 1);
+        assertEquals(randomQuestions.length, allQuestions.length);
+    }
+
+    private void isDifferentRandomQuestions() {
+        Question[] allQuestions = questionManager.getAllQuestions();
+        Question[] randomQuestions = questionManager.getTestQuestions(allQuestions.length / 2);
+        for (int i = 0; i < randomQuestions.length - 1; i++) {
+            for (int j = i + 1; j < randomQuestions.length; j++) {
+                assertNotEquals(randomQuestions[i], randomQuestions[j]);
+            }
+        }
     }
 
     @After
