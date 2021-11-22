@@ -42,7 +42,6 @@ public class DatabaseManager {
         }
     }
 
-
     public boolean isExistUser(String username) {
         return userDao.contains(username);
     }

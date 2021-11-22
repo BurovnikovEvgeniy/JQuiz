@@ -194,9 +194,4 @@ public class MapDatabaseTest {
             }
         }
     }
-
-    @After
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
-    }
 }

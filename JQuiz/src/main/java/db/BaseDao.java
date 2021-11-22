@@ -23,10 +23,12 @@ public abstract class BaseDao<T> {
     }
 
     public long getSize() {
-        open();
-        long size = entities.size();
-        close();
-        return size;
+        try {
+            open();
+            return entities.size();
+        } finally {
+            close();
+        }
     }
 
     public String getDbName() {
@@ -34,16 +36,19 @@ public abstract class BaseDao<T> {
     }
 
     protected void open() {
-        db = DBMaker.fileDB(new File(pathToDb + dbName))
+        db = DBMaker.fileDB(pathToDb + dbName)
                 .fileLockDisable()
                 .fileMmapEnable()
                 .checksumHeaderBypass()
                 .closeOnJvmShutdown()
+                .fileDeleteAfterClose()
                 .make();
         entities = db.indexTreeList(treeName, serializer).createOrOpen();
     }
 
     protected void close() {
-        db.close();
+        if (db != null) {
+            db.close();
+        }
     }
 }

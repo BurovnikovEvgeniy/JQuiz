@@ -14,9 +14,12 @@ public class ResultDao extends BaseDao<Result> {
     }
 
     public void addResult(Result newResult) {
-        open();
-        entities.add(newResult);
-        close();
+        try {
+            open();
+            entities.add(newResult);
+        } finally {
+            close();
+        }
     }
 
     public boolean isExistResult(Result result) {
@@ -24,39 +27,54 @@ public class ResultDao extends BaseDao<Result> {
     }
 
     public void updateResult(Result oldResult, Result updatedResult) {
-        int i = findResultIndex(oldResult);
-        open();
-        entities.set(i, updatedResult);
-        close();
+        try {
+            int i = findResultIndex(oldResult);
+            open();
+            entities.set(i, updatedResult);
+        } finally {
+            close();
+        }
     }
 
     public void deleteResult(Result result) {
-        int i = findResultIndex(result);
-        open();
-        entities.remove(i);
-        close();
+        try {
+            int i = findResultIndex(result);
+            open();
+            entities.remove(i);
+        } finally {
+            close();
+        }
     }
 
     public Result[] getAll() {
-        open();
-        Result[] result = new Result[0];
-        result = entities.toArray(result);
-        close();
-        return result;
+        try {
+            open();
+            Result[] result = new Result[0];
+            result = entities.toArray(result);
+            return result;
+        } finally {
+            close();
+        }
     }
 
     public boolean contains(Result result) {
-        open();
-        boolean contains = entities.contains(result);
-        close();
-        return contains;
+        try {
+            open();
+            boolean contains = entities.contains(result);
+            return contains;
+        } finally {
+            close();
+        }
     }
 
     private int findResultIndex(Result result) {
-        open();
-        int index = entities.indexOf(result);
-        close();
-        return index;
+        try {
+            open();
+            int index = entities.indexOf(result);
+            return index;
+        } finally {
+            close();
+        }
     }
 
     public static class ResultSerializer implements Serializer<Result>, Serializable {
