@@ -15,70 +15,91 @@ public class QuestionDao extends BaseDao<Question> {
     }
 
     public void addQuestion(Question newQuestion) {
-        open();
-        entities.add(newQuestion);
-        close();
+        try{
+            open();
+            entities.add(newQuestion);
+        } finally {
+            close();
+        }
     }
 
     public Question findQuestion(String question) {
-        open();
-        Question q = null;
-        for (Question question1 : entities) {
-            if (question1.getQuestion().equals(question)) {
-                q = question1;
-                break;
+        try {
+            open();
+            Question q = null;
+            for (Question question1 : entities) {
+                if (question1.getQuestion().equals(question)) {
+                    q = question1;
+                    break;
+                }
             }
+            return q;
+        } finally {
+            close();
         }
-        close();
-        return q;
     }
 
     public void updateQuestion(String question, Question updatedQuestion) {
-        int i = findQuestionIndex(findQuestion(question));
-        open();
-        entities.set(i, updatedQuestion);
-        close();
+        try {
+            int i = findQuestionIndex(findQuestion(question));
+            open();
+            entities.set(i, updatedQuestion);
+        } finally {
+            close();
+        }
     }
 
     public void deleteQuestion(String question) {
-        int i = findQuestionIndex(findQuestion(question));
-        open();
-        entities.remove(i);
-        close();
+        try {
+            int i = findQuestionIndex(findQuestion(question));
+            open();
+            entities.remove(i);
+        } finally {
+            close();
+        }
     }
 
     public Question[] getAll() {
-        open();
-        Question[] result = new Question[0];
-        result = entities.toArray(result);
-        close();
-        return result;
+        try {
+            open();
+            Question[] result = new Question[0];
+            result = entities.toArray(result);
+            return result;
+        } finally {
+            close();
+        }
     }
 
     public boolean contains(String question) {
-        open();
-        boolean contains = false;
-        for (Question q : entities) {
-            if (q.getQuestion().equals(question)) {
-                contains = true;
-                break;
+        try {
+            open();
+            boolean contains = false;
+            for (Question q : entities) {
+                if (q.getQuestion().equals(question)) {
+                    contains = true;
+                    break;
+                }
             }
+            return contains;
+        } finally {
+            close();
         }
-        close();
-        return contains;
     }
 
     private int findQuestionIndex(Question question) {
-        open();
-        int index = -1;
-        for (int i = 0; i < entities.size(); i++) {
-            if (entities.get(i).getQuestion().equals(question.getQuestion())) {
-                index = i;
-                break;
+        try {
+            open();
+            int index = -1;
+            for (int i = 0; i < entities.size(); i++) {
+                if (entities.get(i).getQuestion().equals(question.getQuestion())) {
+                    index = i;
+                    break;
+                }
             }
+            return index;
+        } finally {
+            close();
         }
-        close();
-        return index;
     }
 
     private static class QuestionSerializer implements Serializer<Question>, Serializable {
@@ -96,7 +117,6 @@ public class QuestionDao extends BaseDao<Question> {
             SerializerArray<String> stringSerializerArray = new SerializerArray<>(Serializer.STRING, String.class);
             String[] variants = stringSerializerArray.deserialize(in, i);
             int index = in.readInt();
-
             return new Question(question, variants, index);
         }
     }

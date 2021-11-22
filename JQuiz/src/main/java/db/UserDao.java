@@ -14,57 +14,73 @@ public class UserDao extends BaseDao<User> {
     }
 
     public void addUser(User newUser) {
-        open();
-        entities.add(newUser);
-        close();
-
+        try {
+            open();
+            entities.add(newUser);
+        } finally {
+            close();
+        }
     }
 
     public User findUser(String name) {
-        open();
-        User user = null;
-        for (User u : entities) {
-            if (u.getName().equals(name)) {
-                user = u;
-                break;
+        try {
+            open();
+            User user = null;
+            for (User u : entities) {
+                if (u.getName().equals(name)) {
+                    user = u;
+                    break;
+                }
             }
+            return user;
+        } finally {
+            close();
         }
-        close();
-        return user;
     }
 
     public void updateUser(String name, User updatedUser) {
-        int i = findUserIndex(findUser(name));
-        open();
-        entities.set(i, updatedUser);
-        close();
+        try {
+            int i = findUserIndex(findUser(name));
+            open();
+            entities.set(i, updatedUser);
+        } finally {
+            close();
+        }
     }
 
     public void deleteUser(String name) {
-        int i = findUserIndex(findUser(name));
-        open();
-        entities.remove(i);
-        close();
+        try {
+            int i = findUserIndex(findUser(name));
+            open();
+            entities.remove(i);
+        } finally {
+            close();
+        }
     }
 
     public boolean contains(String username) {
-        open();
-        boolean contains = false;
-        for (User u : entities) {
-            if (u.getName().equals(username)) {
-                contains = true;
-                break;
+        try {
+            open();
+            boolean contains = false;
+            for (User u : entities) {
+                if (u.getName().equals(username)) {
+                    contains = true;
+                    break;
+                }
             }
+            return contains;
+        } finally {
+            close();
         }
-        close();
-        return contains;
     }
 
     private int findUserIndex(User user) {
-        open();
-        int index = entities.indexOf(user);
-        close();
-        return index;
+        try {
+            open();
+            return entities.indexOf(user);
+        } finally {
+            close();
+        }
     }
 
     public static class UserSerializer implements Serializer<User>, Serializable {

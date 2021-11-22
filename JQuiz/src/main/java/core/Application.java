@@ -98,6 +98,55 @@ public class Application {
                     "Hello",
                     "null",
                     1);
+            addQuestion(databaseManager,
+                    "В чем разница между char и Character?",
+                    "Нет разницы, оба примитивы",
+                    "char - примитив, а Character - класс",
+                    "Character - примитив, а char - класс",
+                    "Нет разницы, оба классы",
+                    1);
+            addQuestion(databaseManager,
+                    "От какого класса наследуют все классы Java?",
+                    "Object",
+                    "List",
+                    "Runtime",
+                    "Collection",
+                    0);
+            addQuestion(databaseManager,
+                    "Сколько ключевых слов зарезервировано языком?",
+                    "0",
+                    "25",
+                    "50",
+                    "75",
+                    2);
+            addQuestion(databaseManager,
+                    "Какой класс позволяет делать консольный ввод с клавиатуры?",
+                    "Scanner",
+                    "Writer",
+                    "Reader",
+                    "Printer",
+                    0);
+            addQuestion(databaseManager,
+                    "Какое из этих слов не является ключевым словом в Java",
+                    "static",
+                    "try",
+                    "String",
+                    "new",
+                    2);
+            addQuestion(databaseManager,
+                    " Какое из следующих утверждений верно для method-local inner class?",
+                    "Может быть объявлен как public",
+                    "Может быть объявлен как static",
+                    "Может быть объявлен как final abstract",
+                    "Должен быть объявлен как final",
+                    2);
+            addQuestion(databaseManager,
+                    "Какое из следующих утверждений верно для класса: java.util.ArrayList?",
+                    "Элементы в коллекции упорядочены",
+                    "Элементы коллекции гарантированно уникальные.",
+                    "Элементы в коллекции доступны с помощью уникального ключа",
+                    "Коллекция гарантированно неизменная (immutable)",
+                    0);
         } catch (QuestionAlreadyExistsException e) {
             System.err.println(e.getMessage());
         }
