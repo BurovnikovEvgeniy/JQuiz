@@ -24,3 +24,15 @@ JQuiz - это приложение-викторина. Оно содержит 
  Для запуска программы:
  
  `java -jar target/JQuiz-1.0-SNAPSHOT-jar-with-dependencies.jar`
+
+ ## Docker
+ 
+ Интегрировали Maven и Docker. Так, собрать образ можно с помощью команды
+
+ `mvn dockerfile:build`
+ 
+ Создание образа также происходит при выполнении команды
+ 
+ `mvn package`
+ 
+ 
