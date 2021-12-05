@@ -4,7 +4,6 @@ import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.Serializer;
 
-import java.io.File;
 import java.util.List;
 
 public abstract class BaseDao<T> {
