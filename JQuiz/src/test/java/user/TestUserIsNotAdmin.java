@@ -34,6 +34,6 @@ public class TestUserIsNotAdmin {
 
     @After
     public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+        databaseManager.clearDb();
     }
 }

@@ -33,7 +33,7 @@ public class TestUserIsAdmin {
 
     @After
     public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+        databaseManager.clearDb();
     }
 }
 

@@ -36,6 +36,6 @@ public class TestGetAdmin {
 
     @After
     public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+        databaseManager.clearDb();
     }
 }
