@@ -27,14 +27,14 @@ public class TestAdminSuccessRegistration {
     }
 
     @Test
-    public void testUserIsAdmin() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
+    public void testAdminSuccessRegistration() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
         long size = databaseManager.getUsersSize();
         logInManager.registerAdmin(password);
         assertEquals(size + 1, databaseManager.getUsersSize());
     }
 
     @After
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+    public void after() {
+        databaseManager.clearDb();
     }
 }

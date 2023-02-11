@@ -5,17 +5,17 @@ import core.LogInManager;
 import core.exceptions.EmptyPasswordException;
 import core.exceptions.EmptyUsernameException;
 import core.exceptions.UserAlreadyExistsException;
+import model.User;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-
-public class TestAdminFailedRegistration {
+public class TestFailedRegistrationEmptyPassword {
     private DatabaseManager databaseManager;
     private LogInManager logInManager;
+    private final String username = "sam";
     private final String password = "";
 
     @Before
@@ -25,10 +25,9 @@ public class TestAdminFailedRegistration {
         databaseManager.createDbDirectory();
     }
 
-    @Test (expected = EmptyPasswordException.class)
-    public void testAdminFailedRegistration() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
-        long size = databaseManager.getUsersSize();
-        logInManager.registerAdmin(password);
+    @Test(expected = EmptyPasswordException.class)
+    public void testFailedRegistrationUserAlreadyExists() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
+        logInManager.register(username, password);
     }
 
     @After
