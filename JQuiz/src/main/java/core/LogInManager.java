@@ -6,10 +6,10 @@ import model.User;
 public class LogInManager {
 
     private final DatabaseManager databaseManager;
-
-    public LogInManager(String dbFolderName) {
-        this.databaseManager = new DatabaseManager(dbFolderName);
-    }
+    private final static int MIN_USERNAME_SIZE = 3;
+    private final static int MIN_PASSWORD_SIZE = 3;
+    private final static int MAX_USERNAME_SIZE = 20;
+    private final static int MAX_PASSWORD_SIZE = 20;
 
     public LogInManager(DatabaseManager databaseManager) {
         this.databaseManager = databaseManager;
@@ -18,7 +18,7 @@ public class LogInManager {
     public User logIn(
             String username,
             String password
-    ) throws NullFieldsException, NoSuchUserException, WrongPasswordException, EmptyUsernameException, EmptyPasswordException {
+    ) throws NullFieldsException, NoSuchUserException, WrongPasswordException, EmptyUsernameException, EmptyPasswordException, WrongCredentialsSizeException {
         if (username == null || password == null) {
             throw new NullFieldsException("Имя пользователя или пароль принимают значение null");
         }
@@ -38,12 +38,12 @@ public class LogInManager {
         return user;
     }
 
-    public void register(String username, String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException {
+    public void register(String username, String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException, WrongCredentialsSizeException {
         checkCredentials(username, password);
         databaseManager.addUser(new User(username, password));
     }
 
-    public void registerAdmin(String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException {
+    public void registerAdmin(String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException, WrongCredentialsSizeException {
         register("admin", password);
     }
 
@@ -55,7 +55,7 @@ public class LogInManager {
         return password.equals(admin.getPassword());
     }
 
-    public void changePassword(String username, String password) throws EmptyUsernameException, EmptyPasswordException {
+    public void changePassword(String username, String password) throws EmptyUsernameException, EmptyPasswordException, WrongCredentialsSizeException {
         checkCredentials(username, password);
         databaseManager.updateUser(username, new User(username, password));
     }
@@ -64,13 +64,29 @@ public class LogInManager {
         return databaseManager.findUser("admin");
     }
 
-    private void checkCredentials(String username, String password) throws EmptyUsernameException, EmptyPasswordException {
+    private void checkCredentials(String username, String password) throws EmptyUsernameException, EmptyPasswordException, WrongCredentialsSizeException {
         if (username.isEmpty()) {
             throw new EmptyUsernameException("Введите имя пользователя!");
         }
 
         if (password.isEmpty()) {
             throw new EmptyPasswordException("Введите пароль!");
+        }
+
+        if (username.length() < MIN_USERNAME_SIZE) {
+            throw new WrongCredentialsSizeException("Логин слишком маленький!");
+        }
+
+        if (username.length() > MAX_USERNAME_SIZE) {
+            throw new WrongCredentialsSizeException("Логин слишком большой!");
+        }
+
+        if (password.length() < MIN_PASSWORD_SIZE) {
+            throw new WrongCredentialsSizeException("Пароль слишком маленький!");
+        }
+
+        if (password.length() > MAX_PASSWORD_SIZE) {
+            throw new WrongCredentialsSizeException("Пароль слишком большой!");
         }
     }
 }

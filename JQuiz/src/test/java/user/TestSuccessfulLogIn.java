@@ -26,7 +26,7 @@ public class TestSuccessfulLogIn {
     }
 
     @Test
-    public void testSuccessfulLogIn() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testSuccessfulLogIn() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         assertEquals(user, logInManager.logIn(user.getName(), user.getPassword()));
     }
 

@@ -17,7 +17,7 @@ public class Application {
         addQuestions(databaseManager);
     }
 
-    private void addQuestions(DatabaseManager databaseManager) {
+    void addQuestions(DatabaseManager databaseManager) {
         try {
             addQuestion(databaseManager,
                     "Что вернет выражение 1.0/0.0?",
@@ -148,7 +148,7 @@ public class Application {
         }
     }
 
-    private void addQuestion(DatabaseManager dm, String question, String answer1, String answer2, String answer3, String answer4,
+    void addQuestion(DatabaseManager dm, String question, String answer1, String answer2, String answer3, String answer4,
                              int correctIndex) throws QuestionAlreadyExistsException {
         if (!dm.isExistQuestion(question)) {
             String[] answers = new String[]{answer1, answer2, answer3, answer4};

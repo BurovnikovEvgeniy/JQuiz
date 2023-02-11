@@ -29,7 +29,7 @@ public class TestSuccessfulChangePassword {
     }
 
     @Test
-    public void testSuccessfulChangePassword() throws EmptyUsernameException, EmptyPasswordException {
+    public void testSuccessfulChangePassword() throws EmptyUsernameException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.changePassword(username, newPassword);
         assertEquals(newPassword, databaseManager.findUser(username).getPassword());
     }

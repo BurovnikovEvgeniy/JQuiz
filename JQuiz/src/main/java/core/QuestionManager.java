@@ -7,10 +7,6 @@ public class QuestionManager {
 
     private final DatabaseManager databaseManager;
 
-    public QuestionManager(String dbFolderName) {
-        this.databaseManager = new DatabaseManager(dbFolderName);
-    }
-
     public QuestionManager(DatabaseManager databaseManager){
         this.databaseManager = databaseManager;
     }

@@ -26,7 +26,7 @@ public class TestFailedLogInAfterDeleting {
     }
 
     @Test(expected = NoSuchUserException.class)
-    public void testSuccessfulLogIn() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testSuccessfulLogIn() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         databaseManager.deleteUser(user.getName());
         logInManager.logIn(user.getName(), user.getPassword());
     }

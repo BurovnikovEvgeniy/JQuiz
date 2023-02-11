@@ -24,7 +24,7 @@ public class TestLogInWithFailedPassword {
     }
 
     @Test(expected = WrongPasswordException.class)
-    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.logIn(user.getName(), "12345");
     }
 
