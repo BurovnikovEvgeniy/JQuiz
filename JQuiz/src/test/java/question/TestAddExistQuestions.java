@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import core.DatabaseManager;
-import core.QuestionManager;
 import core.exceptions.QuestionAlreadyExistsException;
 import model.Question;
 

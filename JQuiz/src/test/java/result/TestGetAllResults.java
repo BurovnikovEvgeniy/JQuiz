@@ -10,9 +10,9 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertArrayEquals;
 
-public class TestAddManyResults {
+public class TestGetAllResults {
     private DatabaseManager databaseManager;
     private ResultManager resultManager;
     private Result result;
@@ -26,17 +26,23 @@ public class TestAddManyResults {
 
     @Test
     public void testAddManyResults() {
-        long size = databaseManager.getResultsSize();
-
-        resultManager.saveResults(new Result("vanya", new Date(), 80));
-        resultManager.saveResults(new Result("petya", new Date(), 100));
-        resultManager.saveResults(new Result("masha", new Date(), 120));
-
-        assertEquals(size + 3, databaseManager.getResultsSize());
+        Result[] results = new Result[3];
+        Result vanya = new Result("vanya", new Date(), 80);
+        Result petya = new Result("petya", new Date(), 100);
+        Result masha = new Result("masha", new Date(), 120);
+        results[0] = vanya;
+        results[1] = petya;
+        results[2] = masha;
+        resultManager.saveResults(vanya);
+        resultManager.saveResults(petya);
+        resultManager.saveResults(masha);
+        assertArrayEquals(results, resultManager.getAllResults());
     }
 
     @After
     public void after() {
         databaseManager.clearDb();
     }
+
+
 }

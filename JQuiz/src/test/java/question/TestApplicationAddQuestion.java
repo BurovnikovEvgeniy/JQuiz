@@ -1,5 +1,6 @@
 package question;
 
+import core.Application;
 import core.DatabaseManager;
 import core.QuestionManager;
 import core.exceptions.QuestionAlreadyExistsException;
@@ -12,23 +13,26 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestAddOneQuestion {
+public class TestApplicationAddQuestion {
     private DatabaseManager databaseManager;
-    private QuestionManager questionManager;
-    private final Question preAddedQuestion = new Question("Which one?", new String[]{"one", "two", "three", "four"}, 2);
+    private final String question = "Which one?";
+    private final String answer1 = "one";
+    private final String answer2 = "two";
+    private final String answer3 = "three";
+    private final String answer4 = "four";
+    private final int correctIndex = 2;
+
 
     @Before
     public void before() throws IOException, QuestionAlreadyExistsException {
         databaseManager = new DatabaseManager("db_test");
         databaseManager.createDbDirectory();
-        questionManager = new QuestionManager(databaseManager);
-        databaseManager.addQuestion(preAddedQuestion);
     }
 
     @Test
-    public void testAddOneQuestion() throws QuestionAlreadyExistsException {
+    public void testApplicationAddQuestion() throws QuestionAlreadyExistsException {
         long size = databaseManager.getQuestionsSize();
-        questionManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
+        Application.addQuestion(databaseManager, question, answer1, answer2, answer3, answer4, correctIndex);
         assertEquals(size + 1, databaseManager.getQuestionsSize());
     }
 
