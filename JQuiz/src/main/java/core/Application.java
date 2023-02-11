@@ -17,7 +17,7 @@ public class Application {
         addQuestions(databaseManager);
     }
 
-    void addQuestions(DatabaseManager databaseManager) {
+    public void addQuestions(DatabaseManager databaseManager) {
         try {
             addQuestion(databaseManager,
                     "Что вернет выражение 1.0/0.0?",
