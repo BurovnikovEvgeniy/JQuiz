@@ -11,6 +11,10 @@ public class QuestionManager {
         this.databaseManager = new DatabaseManager(dbFolderName);
     }
 
+    public QuestionManager(DatabaseManager databaseManager){
+        this.databaseManager = databaseManager;
+    }
+
     public Question[] getAllQuestions() {
         return databaseManager.getAllQuestions();
     }

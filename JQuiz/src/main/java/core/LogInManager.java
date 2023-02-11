@@ -11,6 +11,10 @@ public class LogInManager {
         this.databaseManager = new DatabaseManager(dbFolderName);
     }
 
+    public LogInManager(DatabaseManager databaseManager) {
+        this.databaseManager = databaseManager;
+    }
+
     public void logIn(
             String username,
             String password

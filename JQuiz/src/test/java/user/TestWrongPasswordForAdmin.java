@@ -1,6 +1,7 @@
 package user;
 
 import core.DatabaseManager;
+import core.LogInManager;
 import core.exceptions.UserAlreadyExistsException;
 import model.User;
 import org.junit.After;
@@ -8,28 +9,32 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestAddOneUser {
+public class TestWrongPasswordForAdmin {
     private DatabaseManager databaseManager;
+    private LogInManager logInManager;
+    private final String admin = "admin";
+    private final String password = "qwerty";
+    private final String wrongPassword = "qwrty";
 
     @Before
-    public void before() throws IOException {
+    public void before() throws IOException, UserAlreadyExistsException {
         databaseManager = new DatabaseManager("db_test");
+        logInManager = new LogInManager(databaseManager);
         databaseManager.createDbDirectory();
+        databaseManager.addUser(new User(admin, password));
     }
 
     @Test
-    public void testAddOneUser() throws UserAlreadyExistsException {
-        long size = databaseManager.getUsersSize();
-        databaseManager.addUser(new User("vanya", "qwerty"));
-        assertEquals(size + 1, databaseManager.getUsersSize());
+    public void testWrongPasswordForAdmin() {
+        assertEquals(false, logInManager.isAdmin(admin, wrongPassword));
     }
 
     @After
     public void after() throws IOException {
         databaseManager.deleteDbDirectory();
     }
+
 }
