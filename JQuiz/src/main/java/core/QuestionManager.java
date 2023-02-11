@@ -40,7 +40,7 @@ public class QuestionManager {
         databaseManager.updateQuestion(oldQuestion.getQuestion(), newQuestion);
     }
 
-    private int[] getRandomIndexes(int count, int max) {
+    public int[] getRandomIndexes(int count, int max) {
         int[] result = new int[count];
         for (int i = 0; i < count; i++) {
             boolean flag = false;
