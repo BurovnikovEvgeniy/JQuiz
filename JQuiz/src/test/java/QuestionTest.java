@@ -83,9 +83,4 @@ public class QuestionTest {
             }
         }
     }
-
-    @After
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
-    }
 }

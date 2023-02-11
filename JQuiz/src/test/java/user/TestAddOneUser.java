@@ -3,6 +3,7 @@ package user;
 import core.DatabaseManager;
 import core.exceptions.UserAlreadyExistsException;
 import model.User;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,8 +27,8 @@ public class TestAddOneUser {
         assertEquals(size + 1, databaseManager.getUsersSize());
     }
 
-    @Test
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+    @After
+    public void after() {
+        databaseManager.clearDb();
     }
 }
