@@ -61,7 +61,7 @@ public class RegisterScreen extends BaseScreen {
             try {
                 MainFrame mainFrame = (MainFrame) parentFrame;
                 if (isAdmin) {
-                    mainFrame.getLogInManager().registerAdmin(new String(passwordField.getPassword()));
+                    mainFrame.getLogInManager().registerAdmin(loginField.getText(), new String(passwordField.getPassword()));
                     parentFrame.getContentPane().remove(0);
                     parentFrame.add(new LogInScreen(parentFrame));
                 } else {
