@@ -37,8 +37,8 @@ public class LogInManager {
         databaseManager.addUser(new User(username, password));
     }
 
-    public void registerAdmin(String username, String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException {
-        register(username, password);
+    public void registerAdmin(String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException {
+        register("admin", password);
     }
 
     public boolean isAdmin(String username, String password) {
