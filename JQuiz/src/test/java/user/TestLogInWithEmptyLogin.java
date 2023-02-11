@@ -26,11 +26,11 @@ public class TestLogInWithEmptyLogin {
     }
 
     @Test (expected = EmptyUsernameException.class)
-    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.logIn("", user.getPassword());
     }
     @Test (expected = NullFieldsException.class)
-    public void testLogInWithNullLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testLogInWithNullLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.logIn(null, user.getPassword());
     }
 

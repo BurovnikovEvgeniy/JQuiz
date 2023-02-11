@@ -27,7 +27,7 @@ public class TestChangeToEmptyPassword {
     }
 
     @Test (expected = EmptyPasswordException.class)
-    public void testChangeToEmptyPassword() throws EmptyUsernameException, EmptyPasswordException {
+    public void testChangeToEmptyPassword() throws EmptyUsernameException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.changePassword(username, newPassword);
     }
 

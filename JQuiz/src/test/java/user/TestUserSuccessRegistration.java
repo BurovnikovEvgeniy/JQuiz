@@ -5,6 +5,7 @@ import core.LogInManager;
 import core.exceptions.EmptyPasswordException;
 import core.exceptions.EmptyUsernameException;
 import core.exceptions.UserAlreadyExistsException;
+import core.exceptions.WrongCredentialsSizeException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class TestUserSuccessRegistration {
     }
 
     @Test
-    public void testUserSuccessRegistration() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
+    public void testUserSuccessRegistration() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException, WrongCredentialsSizeException {
         long size = databaseManager.getUsersSize();
         logInManager.register(username, password);
         assertEquals(size + 1, databaseManager.getUsersSize());

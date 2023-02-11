@@ -39,10 +39,6 @@ public abstract class BaseDao<T> {
         }
     }
 
-    public String getDbName() {
-        return dbName;
-    }
-
     protected void open() {
         db = DBMaker.fileDB(pathToDb + dbName)
                 .fileLockDisable()

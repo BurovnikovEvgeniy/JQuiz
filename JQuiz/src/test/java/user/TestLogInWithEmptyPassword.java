@@ -23,11 +23,11 @@ public class TestLogInWithEmptyPassword {
     }
 
     @Test(expected = EmptyPasswordException.class)
-    public void testLogInWithEmptyPassword() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testLogInWithEmptyPassword() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.logIn(user.getName(), "");
     }
     @Test (expected = NullFieldsException.class)
-    public void testLogInWithNullPassword() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testLogInWithNullPassword() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.logIn(user.getName(), null);
     }
 
