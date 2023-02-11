@@ -10,6 +10,10 @@ public class ResultManager {
         this.databaseManager = new DatabaseManager(dbFolderName);
     }
 
+    public ResultManager(DatabaseManager databaseManager){
+        this.databaseManager = databaseManager;
+    }
+
     public void saveResults(Result result) {
         databaseManager.addResult(result);
     }
