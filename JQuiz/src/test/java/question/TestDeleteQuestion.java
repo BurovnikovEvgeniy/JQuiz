@@ -14,20 +14,21 @@ import static org.junit.Assert.assertEquals;
 
 public class TestDeleteQuestion {
     private DatabaseManager databaseManager;
+    private QuestionManager questionManager;
     private final Question preAddedQuestion = new Question("Which one?", new String[]{"one", "two", "three", "four"}, 2);
 
     @Before
     public void before() throws IOException, QuestionAlreadyExistsException {
         databaseManager = new DatabaseManager("db_test");
         databaseManager.createDbDirectory();
+        questionManager = new QuestionManager(databaseManager);
         databaseManager.addQuestion(preAddedQuestion);
     }
 
     @Test
     public void testDeleteQuestion() {
-        String requiredQuestionText = preAddedQuestion.getQuestion();
         long size = databaseManager.getQuestionsSize();
-        databaseManager.deleteQuestion(requiredQuestionText);
+        questionManager.deleteQuestion(preAddedQuestion);
         assertEquals(size - 1, databaseManager.getQuestionsSize());
     }
 
