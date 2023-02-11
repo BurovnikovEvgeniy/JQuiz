@@ -11,6 +11,7 @@ import model.User;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class DatabaseManager {
@@ -32,14 +33,10 @@ public class DatabaseManager {
         Files.createDirectories(Paths.get(PATH_TO_DBS + dbFolderName));
     }
 
-    public void deleteDbDirectory() throws IOException {
-        if (Files.exists(Paths.get(PATH_TO_DBS + dbFolderName))) {
-            System.gc();
-            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName + userDao.getDbName()));
-            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName + resultDao.getDbName()));
-            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName + questionDao.getDbName()));
-            Files.deleteIfExists(Paths.get(PATH_TO_DBS + dbFolderName));
-        }
+    public void clearDb() {
+        userDao.deleteAll();
+        questionDao.deleteAll();
+        resultDao.deleteAll();
     }
 
     public boolean isExistUser(String username) {

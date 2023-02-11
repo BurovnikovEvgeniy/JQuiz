@@ -29,7 +29,7 @@ public class TestAddOneUser {
     }
 
     @After
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+    public void after() {
+        databaseManager.clearDb();
     }
 }

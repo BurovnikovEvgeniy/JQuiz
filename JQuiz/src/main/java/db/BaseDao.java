@@ -30,6 +30,15 @@ public abstract class BaseDao<T> {
         }
     }
 
+    public void deleteAll() {
+        try {
+            open();
+            entities.clear();
+        } finally {
+            close();
+        }
+    }
+
     public String getDbName() {
         return dbName;
     }
