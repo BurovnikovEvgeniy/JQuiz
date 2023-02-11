@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestResultIsEqualToItself {
     @Test
-    public void testInequalityOfResultAndNull() {
+    public void testResultIsEqualToItself() {
         Date date = new Date();
         Result result = new Result("name", date, 10);
         assertEquals(result, result);
