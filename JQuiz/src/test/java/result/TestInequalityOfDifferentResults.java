@@ -7,9 +7,9 @@ import java.util.Date;
 
 import static org.junit.Assert.assertNotEquals;
 
-public class TestInequalityOfDifferentUsers {
+public class TestInequalityOfDifferentResults {
     @Test
-    public void testEqualityOfDifferentUsersWithSameFields() {
+    public void testInequalityOfDifferentResults() {
         Date date = new Date();
         Result result1 = new Result("name1", date, 10);
         Result result2 = new Result("name2", date, 10);
