@@ -5,6 +5,7 @@ import core.LogInManager;
 import core.exceptions.EmptyPasswordException;
 import core.exceptions.EmptyUsernameException;
 import core.exceptions.UserAlreadyExistsException;
+import core.exceptions.WrongCredentialsSizeException;
 import model.User;
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class TestFailedRegistrationEmptyPassword {
     }
 
     @Test(expected = EmptyPasswordException.class)
-    public void testFailedRegistrationUserAlreadyExists() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
+    public void testFailedRegistrationUserAlreadyExists() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.register(username, password);
     }
 

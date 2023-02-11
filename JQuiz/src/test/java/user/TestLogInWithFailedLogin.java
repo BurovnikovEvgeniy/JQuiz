@@ -23,7 +23,7 @@ public class TestLogInWithFailedLogin {
     }
 
     @Test(expected = NoSuchUserException.class)
-    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException, WrongCredentialsSizeException {
         logInManager.logIn(user.getName(), user.getPassword());
     }
 

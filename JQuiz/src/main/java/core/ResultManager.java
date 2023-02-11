@@ -6,10 +6,6 @@ public class ResultManager {
 
     private final DatabaseManager databaseManager;
 
-    public ResultManager(String dbFolderName) {
-        this.databaseManager = new DatabaseManager(dbFolderName);
-    }
-
     public ResultManager(DatabaseManager databaseManager){
         this.databaseManager = databaseManager;
     }
