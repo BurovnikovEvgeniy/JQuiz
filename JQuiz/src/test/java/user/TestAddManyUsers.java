@@ -25,8 +25,8 @@ public class TestAddManyUsers {
     public void testAddManyUser() throws UserAlreadyExistsException {
         long size = databaseManager.getUsersSize();
 
-        databaseManager.addUser(new User("petya", "1234"));
-        databaseManager.addUser(new User("masha", "hrGS9SbWze"));
+        databaseManager.addUser(new User("petyaa", "1234"));
+        databaseManager.addUser(new User("mashaa", "hrGS9SbWze"));
 
         assertEquals(size + 2, databaseManager.getUsersSize());
     }

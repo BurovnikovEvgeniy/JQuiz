@@ -2,7 +2,7 @@ package user;
 
 import core.DatabaseManager;
 import core.LogInManager;
-import core.exceptions.UserAlreadyExistsException;
+import core.exceptions.*;
 import model.User;
 import org.junit.After;
 import org.junit.Before;
@@ -10,25 +10,21 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-
-public class TestUserIsAdmin {
+public class TestLogInWithFailedLogin {
     private DatabaseManager databaseManager;
     private LogInManager logInManager;
-    private final String admin = "admin";
-    private final String password = "qwerty";
+    private static final User user = new User("alex", "1234");
 
     @Before
-    public void before() throws IOException, UserAlreadyExistsException {
+    public void setUp() throws IOException, UserAlreadyExistsException {
         databaseManager = new DatabaseManager("db_test");
         logInManager = new LogInManager(databaseManager);
         databaseManager.createDbDirectory();
-        databaseManager.addUser(new User(admin, password));
     }
 
-    @Test
-    public void testUserIsAdmin() {
-        assertEquals(true, logInManager.isAdmin(admin, password));
+    @Test(expected = NoSuchUserException.class)
+    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+        logInManager.logIn(user.getName(), user.getPassword());
     }
 
     @After
@@ -36,4 +32,3 @@ public class TestUserIsAdmin {
         databaseManager.clearDb();
     }
 }
-

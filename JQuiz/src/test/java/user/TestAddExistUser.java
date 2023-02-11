@@ -2,6 +2,7 @@ package user;
 
 import java.io.IOException;
 
+import core.exceptions.EmptyPasswordException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,13 +24,13 @@ public class TestAddExistUser {
         databaseManager.addUser(user);
     }
 
-    @Test
-    public void testAddExistUser() {
-        Assert.assertThrows(UserAlreadyExistsException.class, () -> databaseManager.addUser(user));
+    @Test (expected = UserAlreadyExistsException.class)
+    public void testAddExistUser() throws UserAlreadyExistsException {
+        databaseManager.addUser(user);
     }
 
     @After
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+    public void after() {
+        databaseManager.clearDb();
     }
 }
