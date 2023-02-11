@@ -11,7 +11,8 @@ public class TestInequalityOfResultAndNull {
     @Test
     public void testInequalityOfResultAndNull() {
         Date date = new Date();
-        Result result = new Result("name", date, 10);
-        assertNotEquals(result, null);
+        Result result1 = new Result("name", date, 10);
+        Result result2 = null;
+        assertNotEquals(result1, result2);
     }
 }
