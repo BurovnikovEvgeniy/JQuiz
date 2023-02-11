@@ -11,12 +11,11 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
-
-public class TestAdminFailedRegistration {
+public class TestFailedRegistrationEmptyUsername {
     private DatabaseManager databaseManager;
     private LogInManager logInManager;
-    private final String password = "";
+    private final String username = "";
+    private final String password = "qwerty";
 
     @Before
     public void before() throws IOException, UserAlreadyExistsException {
@@ -25,10 +24,9 @@ public class TestAdminFailedRegistration {
         databaseManager.createDbDirectory();
     }
 
-    @Test (expected = EmptyPasswordException.class)
-    public void testAdminFailedRegistration() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
-        long size = databaseManager.getUsersSize();
-        logInManager.registerAdmin(password);
+    @Test(expected = EmptyUsernameException.class)
+    public void testFailedRegistrationUserAlreadyExists() throws EmptyUsernameException, UserAlreadyExistsException, EmptyPasswordException {
+        logInManager.register(username, password);
     }
 
     @After

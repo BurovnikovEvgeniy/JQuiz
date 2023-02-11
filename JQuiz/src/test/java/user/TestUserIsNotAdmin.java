@@ -33,7 +33,7 @@ public class TestUserIsNotAdmin {
     }
 
     @After
-    public void after() throws IOException {
+    public void after() {
         databaseManager.clearDb();
     }
 }

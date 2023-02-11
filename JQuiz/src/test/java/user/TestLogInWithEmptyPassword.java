@@ -1,19 +1,16 @@
 package user;
 
-import java.io.IOException;
-
+import core.DatabaseManager;
+import core.LogInManager;
 import core.exceptions.*;
+import model.User;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import core.DatabaseManager;
-import core.LogInManager;
-import model.User;
+import java.io.IOException;
 
-public class TestLogInWithEmptyLogin {
-
+public class TestLogInWithEmptyPassword {
     private DatabaseManager databaseManager;
     private LogInManager logInManager;
     private static final User user = new User("petya", "1234");
@@ -25,18 +22,17 @@ public class TestLogInWithEmptyLogin {
         databaseManager.createDbDirectory();
     }
 
-    @Test (expected = EmptyUsernameException.class)
-    public void testLogInWithEmptyLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
-        logInManager.logIn("", user.getPassword());
+    @Test(expected = EmptyPasswordException.class)
+    public void testLogInWithEmptyPassword() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+        logInManager.logIn(user.getName(), "");
     }
     @Test (expected = NullFieldsException.class)
-    public void testLogInWithNullLogin() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
-        logInManager.logIn(null, user.getPassword());
+    public void testLogInWithNullPassword() throws EmptyUsernameException, WrongPasswordException, NullFieldsException, NoSuchUserException, EmptyPasswordException {
+        logInManager.logIn(user.getName(), null);
     }
 
     @After
     public void after() {
         databaseManager.clearDb();
     }
-
 }

@@ -15,7 +15,7 @@ public class LogInManager {
         this.databaseManager = databaseManager;
     }
 
-    public void logIn(
+    public User logIn(
             String username,
             String password
     ) throws NullFieldsException, NoSuchUserException, WrongPasswordException, EmptyUsernameException, EmptyPasswordException {
@@ -34,6 +34,8 @@ public class LogInManager {
         if (!user.getPassword().equals(password)) {
             throw new WrongPasswordException("Неверный пароль!");
         }
+
+        return user;
     }
 
     public void register(String username, String password) throws EmptyUsernameException, EmptyPasswordException, UserAlreadyExistsException {
