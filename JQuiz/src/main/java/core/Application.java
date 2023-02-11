@@ -2,7 +2,6 @@ package core;
 
 import core.exceptions.QuestionAlreadyExistsException;
 import model.Question;
-import ui.MainFrame;
 
 import java.io.IOException;
 
@@ -16,9 +15,6 @@ public class Application {
             System.err.println(e.getMessage());
         }
         addQuestions(databaseManager);
-
-        MainFrame frame = new MainFrame("db");
-        frame.setVisible(true);
     }
 
     private void addQuestions(DatabaseManager databaseManager) {

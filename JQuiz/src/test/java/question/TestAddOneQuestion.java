@@ -1,47 +1,36 @@
 package question;
 
-import java.io.IOException;
-
-import org.apache.commons.lang3.RandomStringUtils;
+import core.DatabaseManager;
+import core.exceptions.QuestionAlreadyExistsException;
+import model.Question;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import core.DatabaseManager;
-import core.QuestionManager;
-import core.exceptions.QuestionAlreadyExistsException;
-import model.Question;
+import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 public class TestAddOneQuestion {
-
-    private static final String stringQuestion = RandomStringUtils.randomAlphabetic(10) + " ?";
-    private static final String[] answers = new String[] {
-            RandomStringUtils.randomAlphabetic(5),
-            RandomStringUtils.randomAlphabetic(5),
-            RandomStringUtils.randomAlphabetic(5)
-    };
-    private static final Question question = new Question(stringQuestion, answers, 2);
     private DatabaseManager databaseManager;
-    private QuestionManager questionManager;
+    private final Question preAddedQuestion = new Question("Which one?", new String[]{"one", "two", "three", "four"}, 2);
 
     @Before
-    public void setUp() throws IOException {
+    public void before() throws IOException, QuestionAlreadyExistsException {
         databaseManager = new DatabaseManager("db_test");
         databaseManager.createDbDirectory();
-        questionManager = new QuestionManager("db_test");
+        databaseManager.addQuestion(preAddedQuestion);
     }
 
     @Test
-    public void testAddExistQuestions() throws QuestionAlreadyExistsException {
+    public void testAddOneQuestion() throws QuestionAlreadyExistsException {
         long size = databaseManager.getQuestionsSize();
-        databaseManager.addQuestion(question);
+        databaseManager.addQuestion(new Question("How many?", new String[]{"one", "two", "three", "four"}, 2));
         assertEquals(size + 1, databaseManager.getQuestionsSize());
     }
 
     @After
-    public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+    public void after() {
+        databaseManager.clearDb();
     }
 }

@@ -33,6 +33,6 @@ public class TestChangeToEmptyPassword {
 
     @After
     public void after() throws IOException {
-        databaseManager.deleteDbDirectory();
+        databaseManager.clearDb();
     }
 }
